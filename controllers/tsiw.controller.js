@@ -1,5 +1,6 @@
 // get resource model (definition and DB operations)
 const TSIW = require('../models/tsiw.model.js');
+//get user
 exports.findAllUsers = (req, res) => {
     TSIW.getAllUsers((err, data) => {
         if (err) // send error response
