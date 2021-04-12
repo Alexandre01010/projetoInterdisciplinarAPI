@@ -10,7 +10,7 @@ router.use((req, res, next) => {
     });
     next()
 })
-//router.get('/users', tsiwController.findAllUsers);
+router.get('/users', tsiwController.findAllUsers);
 // router.get('/:tutorialID', tutorialController.findOne);
 
 //send a predefined error message for invalid routes on TUTORIALS
