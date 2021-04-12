@@ -15,5 +15,6 @@ app.use('/users', require('./routes/tsiw.routes.js'))
 // handle invalid routes
 app.get('*', function (req, res) {
     res.status(404).json({ message: 'WHAT???' });
+    //teste commit
 })
 app.listen(port, host, () => console.log(`App listening at http://${host}:${port}/`));
