@@ -1,6 +1,6 @@
 const express = require('express');
 let router = express.Router();
-const tutorialController = require('../controllers/tsiw.controller');
+const tsiwController = require('../controllers/tsiw.controller');
 // middleware for all routes related with tutorials
 router.use((req, res, next) => {
     const start = Date.now();
