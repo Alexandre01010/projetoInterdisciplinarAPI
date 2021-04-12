@@ -22,3 +22,17 @@ Tsiw.getAllUsers = (result) =>{
 }
 // EXPORT MODEL (required by CONTROLLER)
 module.exports = Tsiw;
+
+Tsiw.deteleUser = (id, result) => {
+    sql.query("DELETE FROM user WHERE id = ?", [id], (err,res) => {
+        if (err) {
+            result(err, null);
+            return;
+        }
+        if (res.affectedRows) {
+            result(null, res);
+            return;
+        }
+        result({ kind: "not_found"}, null);
+    });
+}
