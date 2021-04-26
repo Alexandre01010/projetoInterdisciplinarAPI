@@ -12,7 +12,7 @@ router.use((req, res, next) => {
     next()
 })
 
-router.route('/')
+router.route('/propostas')
     .get(propostasController.findAll)
     .post(propostasController.create)
 
