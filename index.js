@@ -11,7 +11,7 @@ app.get('/', function (req, res) {
     res.status(200).json({ message: 'home -- TUTORIALS api' });
 });
 // routing middleware for resource TUTORIALS
-app.use('/tutorials', require('./routes/tutorials.routes.js'))
+app.use('/tutorials', require('./routes/propostas.routes.js'))
 // handle invalid routes
 app.get('*', function (req, res) {
     res.status(404).json({ message: 'WHAT???' });
