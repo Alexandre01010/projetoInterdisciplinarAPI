@@ -1,5 +1,5 @@
 const db = require("../models/db.js");
-const Comment = db.comment;
+const Candidatura = db.comment;
 const Tutorial = db.tutorial;
 
 // exports.getComment = (req, res) => {
