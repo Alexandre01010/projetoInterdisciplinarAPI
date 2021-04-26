@@ -24,7 +24,7 @@ db.proposta = require("./propostas.model.js")(sequelize, DataTypes);
 
 db.candidatura = require("./candidaturas.model.js")(sequelize, DataTypes);
 //define the 1:N relationship
-db.proposta.hasMany(db.candidatura); // tutorialId is added into Comment model as FK
-db.candidatura.belongsTo(db.proposta);
+//db.proposta.hasMany(db.candidatura); // tutorialId is added into Comment model as FK
+//db.candidatura.belongsTo(db.proposta);
 
 module.exports = db;
