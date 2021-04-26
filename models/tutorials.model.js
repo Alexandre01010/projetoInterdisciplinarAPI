@@ -1,6 +1,6 @@
 // use the exports object as a function instead of an object
 module.exports = (sequelize, DataTypes) => {
-  const Tutorial = sequelize.define("tutorial", {
+  const Proposta = sequelize.define("proposta", {
     title: {
       type: DataTypes.STRING,
       allowNull: false //adds NOT NULL to the column
@@ -14,5 +14,5 @@ module.exports = (sequelize, DataTypes) => {
   }, {
     timestamps: false
   });
-  return Tutorial;
+  return Proposta;
 };
