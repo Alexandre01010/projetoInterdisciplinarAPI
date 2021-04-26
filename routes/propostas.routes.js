@@ -11,18 +11,7 @@ router.use((req, res, next) => {
     });
     next()
 })
-router.get('/', tutorialController.findAll);
-router.get('/published', tutorialController.findAllPublished)
-router.get('/comented',tutorialController.findAllComented)
-router.get('')
-router.get('/:tutorialID', tutorialController.findOne);
-router.put('/:tutorialID', tutorialController.update)
-router.delete('/:tutorialID', tutorialController.delete);
-router.get('/published', tutorialController.findAllPublished)
-router.post('/', tutorialController.create)
 
-router.use('/:tutorialID/comments', require('./candidaturas.routes'))
-router.use('/:tutorialID/comments/:commentID', require('./candidaturas.routes'))
 
 // //send a predefined error message for invalid routes on TUTORIALS
 router.all('*', function (req, res) {
