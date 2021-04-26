@@ -1,16 +1,18 @@
 // use the exports object as a function instead of an object
 module.exports = (sequelize, DataTypes) => {
   const Proposta = sequelize.define("proposta", {
-    title: {
-      type: DataTypes.STRING,
+    id: {
+      type: DataTypes.INTEGER,
+      primaryKey: true,
       allowNull: false //adds NOT NULL to the column
     },
-    description: {
+    titulo: {
       type: DataTypes.STRING
     },
-    published: {
-      type: DataTypes.BOOLEAN
-    }
+    objetivos: {
+      type: DataTypes.STRING
+    },
+    
   }, {
     timestamps: false
   });
