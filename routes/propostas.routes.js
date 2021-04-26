@@ -1,6 +1,6 @@
 const express = require('express');
 let router = express.Router();
-const propostasController = require('../controllers/propostas.controller');
+const propostasController = require('../controllers/propostas.controller.js');
 const { proposta } = require('../models/db');
 // middleware for all routes related with tutorials
 router.use((req, res, next) => {
@@ -14,9 +14,7 @@ router.use((req, res, next) => {
 
 router.route('/propostas')
     .get(propostasController.findAll)
-    //.post(propostasController.findAll)
-router.route('/')
-    .post(propostasController.createProposal)
+    .post(propostasController.create)
 
 // //send a predefined error message for invalid routes on TUTORIALS
 router.all('*', function (req, res) {
