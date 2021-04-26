@@ -15,12 +15,7 @@ router.use((req, res, next) => {
     next()
 })
 
-router.route('/')
-    .post(commentController.createComment)
-    .get(commentController.findAll)
 
-router.route('/:commentID')
-    .get(commentController.getComment)
 
 // //send a predefined error message for invalid routes on TUTORIALS
 router.all('*', function (req, res) {
