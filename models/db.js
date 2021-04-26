@@ -20,11 +20,11 @@ sequelize.authenticate()
 const db = {};
 db.sequelize = sequelize; //export the Sequelize instance (actual connection pool)
 //import TUTORIAL model (and add here any other models defined within the API)
-db.tutorial = require("./propostas.model.js")(sequelize, DataTypes);
+db.propostas = require("./propostas.model.js")(sequelize, DataTypes);
 
-db.comment = require("./candidaturas.model.js")(sequelize, DataTypes);
+db.candidaturas = require("./candidaturas.model.js")(sequelize, DataTypes);
 //define the 1:N relationship
-db.tutorial.hasMany(db.comment); // tutorialId is added into Comment model as FK
-db.comment.belongsTo(db.tutorial);
+db.propostas.hasMany(db.candidaturas); // tutorialId is added into Comment model as FK
+db.candidaturas.belongsTo(db.propostas);
 
 module.exports = db;
