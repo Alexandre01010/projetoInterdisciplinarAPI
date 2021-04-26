@@ -14,8 +14,8 @@ app.get('/', function (req, res) {
 
 
 app.use('/propostas', require('./routes/propostas.routes.js'))
-// app.use('/candidaturas', require('./routes/candidaturas.routes.js'))
-// app.use('/foruns', require('./routes/foruns.routes.js'))
+ app.use('/candidaturas', require('./routes/candidaturas.routes.js'))
+ app.use('/foruns', require('./routes/foruns.routes.js'))
 // app.use('/notificacoes', require('./routes/notificacoes.routes.js'))
 // app.use('/candidaturas', require('./routes/candidaturas.routes.js'))
 // app.use('/entrevistas', require('./routes/entrevistas.routes.js'))
