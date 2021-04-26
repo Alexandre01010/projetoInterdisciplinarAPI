@@ -1,7 +1,11 @@
 const express = require('express');
-let router = express.Router();
-const tsiwController = require('../controllers/tsiw.controller');
-// middleware for all routes related with tutorials
+
+const commentController = require("../controllers/comments.controller");
+
+
+let router = express.Router({ mergeParams: true });
+
+
 router.use((req, res, next) => {
     const start = Date.now();
     res.on("finish", () => { //finish event is emitted once the response is sent to the client
@@ -10,13 +14,17 @@ router.use((req, res, next) => {
     });
     next()
 })
-router.get('/', tsiwController.findAllUsers);
-// router.get('/:tutorialID', tutorialController.findOne);
 
-//send a predefined error message for invalid routes on TUTORIALS
-// router.all('*', function (req, res) {
-//     res.status(404).json({ message: 'Users: what???' });
-// })
+router.route('/')
+    .post(commentController.createComment)
+    .get(commentController.findAll)
 
+router.route('/:commentID')
+    .get(commentController.getComment)
+
+// //send a predefined error message for invalid routes on TUTORIALS
+router.all('*', function (req, res) {
+    res.status(404).json({ message: 'COMMENTS: what???' });
+})
 // EXPORT ROUTES (required by APP)
 module.exports = router;
