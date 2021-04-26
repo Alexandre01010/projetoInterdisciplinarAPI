@@ -1,7 +1,7 @@
 const express = require('express');
 let router = express.Router();
-const tutorialController = require('../controllers/tutorials.controller');
-const { tutorial } = require('../models/db');
+const propostasController = require('../controllers/propostas.controller');
+const { proposta } = require('../models/db');
 // middleware for all routes related with tutorials
 router.use((req, res, next) => {
     const start = Date.now();
@@ -12,10 +12,13 @@ router.use((req, res, next) => {
     next()
 })
 
+router.route('/propostas')
+    .get(propostasController.findAll)
+    //.post(propostasController.findAll)
 
 // //send a predefined error message for invalid routes on TUTORIALS
 router.all('*', function (req, res) {
-    res.status(404).json({ message: 'TUTORIALS: what???' });
+    res.status(404).json({ message: 'Propostas: Not Found' });
 })
 // EXPORT ROUTES (required by APP)
 module.exports = router;
