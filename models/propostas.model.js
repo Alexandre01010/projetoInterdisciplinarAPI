@@ -12,7 +12,31 @@ module.exports = (sequelize, DataTypes) => {
     objetivos: {
       type: DataTypes.STRING
     },
-    
+    resultados_esperados:{
+      type: DataTypes.STRING
+    },
+    outros_dados:{
+      type: DataTypes.STRING
+    },
+    plano_provisorio_trabalho:{
+      type: DataTypes.STRING
+    },
+    perfil_candidato_desejado:{
+      type: DataTypes.STRING
+    },
+    nome_tutor:{
+      type: DataTypes.STRING
+    },
+    cargo_tutor:{
+      type: DataTypes.STRING
+    },
+    contato:{
+      type: DataTypes.INTEGER
+    },
+    recursos_necessario:{
+      type: DataTypes.STRING
+    }
+
   }, {
     timestamps: false
   });

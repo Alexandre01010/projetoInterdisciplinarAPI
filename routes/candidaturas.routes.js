@@ -1,8 +1,5 @@
 const express = require('express');
 
-const commentController = require("../controllers/comments.controller");
-
-
 let router = express.Router({ mergeParams: true });
 
 
