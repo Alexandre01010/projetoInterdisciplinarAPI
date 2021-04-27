@@ -1,6 +1,6 @@
 // use the exports object as a function instead of an object
 module.exports = (sequelize, DataTypes) => {
-    const Forum = sequelize.define('forum', {
+    const Forum = sequelize.define("forum", {
         id_forum:{
             type:DataTypes.INTEGER,
             primaryKey: true
