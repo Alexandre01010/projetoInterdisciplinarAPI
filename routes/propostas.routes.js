@@ -18,6 +18,7 @@ router.route('/')
 
 router.route('/:proposalID')
     .delete(propostasController.deleteProposal)
+    .get(propostasController.getOne)
 
 // //send a predefined error message for invalid routes on TUTORIALS
 router.all('*', function (req, res) {
