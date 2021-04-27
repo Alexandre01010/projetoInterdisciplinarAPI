@@ -16,6 +16,9 @@ router.route('/')
     .get(propostasController.findAllProposal)
     .post(propostasController.create)
 
+router.route('/:proposalID')
+    .delete(propostasController.deleteProposal)
+
 // //send a predefined error message for invalid routes on TUTORIALS
 router.all('*', function (req, res) {
     res.status(404).json({ message: 'Propostas: Not Found' });
