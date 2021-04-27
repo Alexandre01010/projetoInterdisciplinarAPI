@@ -32,6 +32,46 @@ exports.create = (req, res) => {
         });
     });
 };
+
+exports.deleteProposal = (req, res) => {
+  Proposta.destroy({ where: { id_proposta: req.params.proposalID } })
+    .then(num => {
+      if (num == 1) {
+        res.status(200).json({
+          message: `Tutorial with id ${req.params.proposalID} was successfully deleted!`
+        });
+      } else {
+        res.status(404).json({
+          message: `Not found Tutorial with id=${req.params.proposalID}.`
+        });
+      }
+    })
+    .catch(err => {
+      res.status(500).json({
+        message: `Error deleting Tutorial with id=${req.params.proposalID}.`
+      });
+    });
+};
+
+exports.getOne = (req, res) => {
+  // obtains only a single entry from the table, using the provided primary key
+  Proposta.findByPk(req.params.proposalID)
+    .then(data => {
+      if (data === null)
+        res.status(404).json({
+          message: `Not found Tutorial with id ${req.params.proposalID}.`
+        });
+      else
+        res.json(data);
+    })
+    .catch(err => {
+      res.status(500).json({
+        message: `Error retrieving Tutorial with id ${req.params.proposalID}.`
+      });
+    });
+};
+
+
 //   // Handle tutorial creation on POST
 //   exports.create = (req, res) => {
 //     // Save Tutorial in the database (IF request body data is validated by Sequelize
