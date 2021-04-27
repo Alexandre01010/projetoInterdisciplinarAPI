@@ -12,9 +12,9 @@ router.use((req, res, next) => {
     next()
 })
 
-router.route('/propostas')
-    .get(propostasController.findAll)
-    .post(propostasController.createProposal)
+router.route('/')
+    .get(propostasController.findAllProposal)
+    .post(propostasController.create)
 
 // //send a predefined error message for invalid routes on TUTORIALS
 router.all('*', function (req, res) {
