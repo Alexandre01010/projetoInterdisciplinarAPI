@@ -1,8 +1,7 @@
 const express = require('express');
+let router = express.Router();
+const forunsController = require("../controllers/foruns.controller.js");
 
-const forunsController = require("../controllers/foruns.controller");
-
-let router = express.Router({ mergeParams: true });
 router.use((req, res, next) => {
     const start = Date.now();
     res.on("finish", () => { //finish event is emitted once the response is sent to the client

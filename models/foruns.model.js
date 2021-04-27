@@ -5,7 +5,7 @@ module.exports = (sequelize, DataTypes) => {
             type: DataTypes.STRING,
             allowNull: true //adds NOT NULL to the column
         },
-        dataHora: {
+        data_hora: {
             type: DataTypes.DATE
         },
         gostos: {
