@@ -10,9 +10,11 @@ router.use((req, res, next) => {
     });
     next()
 })
-
+router.route('/:userID')
+        .get(forunsController.findByUser)
 router.route('/')
     .get(forunsController.findAll)
+    .post(forunsController.create)
 
 // //send a predefined error message for invalid routes on TUTORIALS
 router.all('*', function (req, res) {
