@@ -29,8 +29,8 @@ db.candidatura = require("./candidaturas.model.js")(sequelize, DataTypes);
 //db.candidatura.belongsTo(db.proposta);
 //db.foruns.belongsTo(db.user)
 
-db.proposta.hasMany(db.candidatura)
-db.candidatura.belongsTo(db.proposta)
+// db.proposta.hasMany(db.candidatura)
+// db.candidatura.belongsTo(db.proposta)
 // db.candidatura.hasOne(db.proposta)
 // db.proposta.hasMany(db.candidatura)
 

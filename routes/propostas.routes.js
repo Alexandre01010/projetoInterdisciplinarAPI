@@ -22,6 +22,10 @@ router.route('/:proposalID')
 
 router.route('/?type=:tipo&state=:estado&text=:searchText')
     .get(propostasController.findFiltered)
+
+//router.route('/candidaturas', require('./candidaturas.routes'))
+
+//router.route('/:proposalID/candidaruras', require('./candidaturas.routes'))
     
 // //send a predefined error message for invalid routes on TUTORIALS
 router.all('*', function (req, res) {

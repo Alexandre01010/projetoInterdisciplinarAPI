@@ -3,8 +3,26 @@ module.exports = (sequelize, DataTypes) =>{
         id_user:{
             type:DataTypes.INTEGER,
             primaryKey: true
-        }
-    })
+        },
+        id_proposta:{
+            type:DataTypes.INTEGER,
+            primaryKey: true
+        },
+        mensagem:{
+            type:DataTypes.STRING
+        },
+        id_tipo_estado:{
+            type:DataTypes.INTEGER
+        },
+        n_ordem_escolha:{
+            type:DataTypes.INTEGER
+        },
+    },
+    {
+        timestamps: false,
+        freezeTableName: true}
+    )
+    return Candidatura;
 }
 
 

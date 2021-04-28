@@ -1,5 +1,8 @@
 const express = require('express');
-const candidaturasController = require('../controllers/candidaturas.controller.js');
+
+const candidaturaController = require("../controllers/candidaturas.controller");
+
+
 let router = express.Router({ mergeParams: true });
 
 
@@ -12,12 +15,17 @@ router.use((req, res, next) => {
     next()
 })
 
-//router.route('/')
-    //.get(candidaturas.controller)
+router.route('/')
+   // .get(candidaturaController.getCandidaturas)
+    .post(candidaturaController.createCandidatura)
+
+router.route('/get')
+    .get(candidaturaController.getCandidaturas)
+
 
 // //send a predefined error message for invalid routes on TUTORIALS
 router.all('*', function (req, res) {
-    res.status(404).json({ message: 'COMMENTS: what???' });
+    res.status(404).json({ message: 'CANDIDATURAS: what???' });
 })
 // EXPORT ROUTES (required by APP)
 module.exports = router;
