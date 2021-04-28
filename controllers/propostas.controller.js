@@ -71,6 +71,20 @@ exports.getOne = (req, res) => {
     });
 };
 
+exports.findFiltered = (req, res) => {
+  Proposta.findAndCountAll({ where: { email: req.params.type, id_tipo_estado: req.params.state, titulo: req.params.searchText}})
+    .then(data => {
+      // convert response data into custom format
+      const response = getPagingData(data, offset, limit);
+      res.status(200).json(response);
+    })
+    .catch(err => {
+      res.status(500).json({
+        message:
+          err.message || "Some error occurred while retrieving tutorials."
+      });
+    });
+};
 
 //   // Handle tutorial creation on POST
 //   exports.create = (req, res) => {
