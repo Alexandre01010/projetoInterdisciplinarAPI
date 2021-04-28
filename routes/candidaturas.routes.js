@@ -1,5 +1,5 @@
 const express = require('express');
-
+const candidaturasController = require('../controllers/candidaturas.controller.js');
 let router = express.Router({ mergeParams: true });
 
 
@@ -12,7 +12,8 @@ router.use((req, res, next) => {
     next()
 })
 
-
+//router.route('/')
+    //.get(candidaturas.controller)
 
 // //send a predefined error message for invalid routes on TUTORIALS
 router.all('*', function (req, res) {
