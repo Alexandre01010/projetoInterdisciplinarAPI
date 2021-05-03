@@ -3,7 +3,7 @@ module.exports = (sequelize, DataTypes) => {
   const Proposta = sequelize.define("proposta", {
     id_proposta: {
       type: DataTypes.INTEGER,
-      primaryKey: true
+      primaryKey: true,
     },
     titulo: {
       type: DataTypes.STRING
