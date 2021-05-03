@@ -37,12 +37,10 @@ db.candidatura.belongsTo(db.proposta)
 // db.candidatura.hasOne(db.proposta)
 // db.proposta.hasMany(db.candidatura)
 
-//entrevitas relations
+//entrevitas relations commenting this inorder to test just the entrevistas
 db.entrevista = require("./entrevistas.model.js")(sequelize, DataTypes);
-db.estado = require("./estados.model.js")(sequelize, DataTypes);
 
-//1:N relationship for entrevita:tipoestado
-db.estado.hasMany(db.entrevista); 
-db.entrevista.belongsTo(db.estado);
+
+
 
 module.exports = db;

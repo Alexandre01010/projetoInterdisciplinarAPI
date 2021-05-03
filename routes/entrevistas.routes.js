@@ -18,8 +18,7 @@ router.route('/')
 router.route('/:idEntrevista')
     .put(entrevistasController.updateEntrevista)
 
-//you can nest rounter for the Estados da entrevista
-router.use('/:idEntrevista/estados', estadoRouter);
+
 
 //participants part WIP  need to be n:m relationship, reseach that !
 /*router.route('/:idEntrevista/participantes')

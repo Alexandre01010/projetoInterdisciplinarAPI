@@ -5,20 +5,25 @@ const { Op } = require("sequelize")
 
 
 //-------------- For route => '/'  ---------------------------------
-exports.findAllEntrevista = (req, res) => {
-    
-    Entrevistas.findAll(req.body)
+
+exports.findAllEntrevista = (req, res) => {        
+    Entrevistas.findAll()
         .then(data => {
-            
-            res.status(200).json(data);
+            if (data === null)
+                res.status(404).json({
+                    message: `No Entrevistas where found at ${req}.`
+                });
+            else
+                res.json(data);
         })
-        .catch((err) => {
+        .catch(err => {
             res.status(500).json({
                 message:
-                    err.message || "Some error occurred while retrieving entrevistas",
+                    err.message || "Some error occurred while retrieving the Entrevistas."
             });
         });
 };
+
 exports.createEntrevista = (req, res) => {
     
     Entrevistas.create(req.body)
