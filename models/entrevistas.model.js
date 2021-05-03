@@ -1,21 +1,18 @@
 // use the exports object as a function instead of an object
 module.exports = (sequelize, DataTypes) => {
     const Entrevista = sequelize.define("entrevista", { 
-        id_entrevista: {
+        id_agenda: {
             type: DataTypes.INTEGER,
             primaryKey: true
-        },
-        data: {
-            type:  DataTypes.DATE
         },
         id_user:{
             type: DataTypes.INTEGER
         },
-        tipo_estado:{
-            type: DataTypes.INTEGER
+        data_hora:{
+            type:DataTypes.DATE
         },
-        desc_estado:{
-            type: DataTypes.TEXT
+        id_tipo_estado:{
+            type: DataTypes.INTEGER
         },
         texto_agenda:{
             type: DataTypes.TEXT
@@ -24,7 +21,7 @@ module.exports = (sequelize, DataTypes) => {
     }, {
         timestamps: false,
         //freezeTableName: true,
-        tableName:"entrevista"
+        tableName:"agenda"
     });
     return Entrevista;
 };
