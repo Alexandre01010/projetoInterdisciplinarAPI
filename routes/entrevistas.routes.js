@@ -1,6 +1,7 @@
 const express = require('express');
 let router = express.Router();
-const entrevistasController = require("../controllers/entrevista.controller.js");
+const estadoRouter = require("./estados.routes");
+const entrevistasController = require("../controllers/entrevistas.controller.js");
 
 router.use((req, res, next) => {
     const start = Date.now();
@@ -17,13 +18,17 @@ router.route('/')
 router.route('/:idEntrevista')
     .put(entrevistasController.updateEntrevista)
 
-//participants part WIP   
+
+
+//participants part WIP  need to be n:m relationship, reseach that !
 /*router.route('/:idEntrevista/participantes')
     .get(entrevistasController.findParticipantes)
     .post(entrevistasController.createParticipante)
 router.route('/:idEntrevista/participantes/:idParticipante')
     .delete(entrevistasController.deleteParticipante)
 */
+
+
     
 // //send a predefined error message for invalid routes on Entrevista
 router.all('*', function (req, res) {

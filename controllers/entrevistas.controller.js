@@ -5,20 +5,25 @@ const { Op } = require("sequelize")
 
 
 //-------------- For route => '/'  ---------------------------------
-exports.findAllEntrevista = (req, res) => {
-    
-    Foruns.findAllEntrevista(req.body)
+
+exports.findAllEntrevista = (req, res) => {        
+    Entrevistas.findAll()
         .then(data => {
-            
-            res.status(200).json(data);
+            if (data === null)
+                res.status(404).json({
+                    message: `No Entrevistas where found at ${req}.`
+                });
+            else
+                res.json(data);
         })
-        .catch((err) => {
+        .catch(err => {
             res.status(500).json({
                 message:
-                    err.message || "Some error occurred while retrieving entrevistas",
+                    err.message || "Some error occurred while retrieving the Entrevistas."
             });
         });
 };
+
 exports.createEntrevista = (req, res) => {
     
     Entrevistas.create(req.body)
@@ -42,24 +47,24 @@ exports.updateEntrevista = (req,res) => {
         res.status(400).json({ message: "Request body can not be empty!" });
         return;
     }
-    Entrevistas.findByPk(req.params.id)
+    Entrevistas.findByPk(req.params.idEntrevista)
         .then(entrevista => {
             // no data returned means there is no tutorial in DB with that given ID 
             if (entrevista === null)
                 res.status(404).json({
-                    message: `Not found Entrevista with id ${req.params.id}.`
+                    message: `Not found Entrevista with id ${req.params.idEntrevista}.`
                 });
             else {
-                Entrevistas.update(req.body, { where: { id: req.params.id } })
+                Entrevistas.update(req.body, { where: { id: req.params.idEntrevista } })
                     .then(num => {
                         // check if one comment was updated (returns 0 if no data was updated)
                         if (num == 1) {
                             res.status(200).json({
-                                message: `Entrevista id=${req.params.id} was updated successfully.`
+                                message: `Entrevista id=${req.params.idEntrevista} was updated successfully.`
                             });
                         } else {
                             res.status(200).json({
-                                message: `No updates were made on Entrevista id=${req.params.id}.`
+                                message: `No updates were made on Entrevista id=${req.params.idEntrevista}.`
                             });
                         }
                     })
@@ -67,7 +72,7 @@ exports.updateEntrevista = (req,res) => {
         })
         .catch(err => {
             res.status(500).json({
-                message: `Error updating Entrevista with id=${req.params.id}.`
+                message: `Error updating Entrevista with id=${req.params.idEntrevista}.`
             });
         });
 }
