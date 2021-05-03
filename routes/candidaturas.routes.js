@@ -15,11 +15,11 @@ router.use((req, res, next) => {
     next()
 })
 
-router.route('/')
+router.route('/:proposalID')
    // .get(candidaturaController.getCandidaturas)
     .post(candidaturaController.createCandidatura)
 
-router.route('/get')
+router.route('/')
     .get(candidaturaController.getCandidaturas)
 
 
