@@ -18,7 +18,7 @@ app.use('/candidaturas', require('./routes/candidaturas.routes.js'))
 app.use('/foruns', require('./routes/foruns.routes.js'))
 // app.use('/notificacoes', require('./routes/notificacoes.routes.js'))
 app.use('/entrevistas', require('./routes/entrevistas.routes.js'))
-// app.use('/users', require('./routes/users.routes.js'))
+app.use('/users', require('./routes/users.routes.js'))
 
 // handle invalid routes
 app.get('*', function (req, res) {

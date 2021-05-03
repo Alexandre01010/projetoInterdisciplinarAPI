@@ -21,6 +21,7 @@ const db = {};
 db.sequelize = sequelize; //export the Sequelize instance (actual connection pool)
 //import TUTORIAL model (and add here any other models defined within the API)
 db.proposta = require("./propostas.model.js")(sequelize, DataTypes);
+db.user = require("./users.model.js")(sequelize, DataTypes);
 db.forum = require("./foruns.model.js")(sequelize, DataTypes);
 //db.foruns.belongsTo(db.propostas);
 db.candidatura = require("./candidaturas.model.js")(sequelize, DataTypes);
@@ -39,5 +40,11 @@ db.candidatura = require("./candidaturas.model.js")(sequelize, DataTypes);
 
 // db.candidatura.hasOne(db.proposta)
 // db.proposta.hasMany(db.candidatura)
+
+//entrevitas relations commenting this inorder to test just the entrevistas
+db.entrevista = require("./entrevistas.model.js")(sequelize, DataTypes);
+
+
+
 
 module.exports = db;
