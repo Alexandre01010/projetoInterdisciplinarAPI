@@ -35,6 +35,11 @@ db.candidatura = require("./candidaturas.model.js")(sequelize, DataTypes);
 
 // db.proposta.hasMany(db.candidatura)
 // db.candidatura.belongsTo(db.proposta)
+//db.user
+
+// db.user.belongsToMany(db.proposta, { through: db.candidatura})
+// db.proposta.belongsToMany(db.user, { through: db.candidatura})
+
 
 
 

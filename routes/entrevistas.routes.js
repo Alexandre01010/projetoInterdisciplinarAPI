@@ -1,6 +1,6 @@
 const express = require('express');
 let router = express.Router();
-const estadoRouter = require("./estados.routes");
+//const estadoRouter = require("./estados.routes");
 const entrevistasController = require("../controllers/entrevistas.controller.js");
 
 router.use((req, res, next) => {

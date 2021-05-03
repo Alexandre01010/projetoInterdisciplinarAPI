@@ -35,7 +35,7 @@ const Proposta = db.proposta;
 
   exports.createCandidatura = (req, res) => {
     // Save Tutorial in the database (IF request body data is validated by Sequelize
-    Candidatura.create({
+    Candidaturas.create({
       id_user: req.body.id_user, id_proposta: req.params.proposalID, mensagem: req.body.mensagem, 
       id_tipo_estado: req.body.id_tipo_estado, n_ordem_escolha: req.body.n_ordem_escolha 
     })
