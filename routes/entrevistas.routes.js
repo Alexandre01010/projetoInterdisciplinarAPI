@@ -1,6 +1,6 @@
 const express = require('express');
 let router = express.Router();
-const forunsController = require("../controllers/entrevistas.controller.js");
+const entrevistasController = require("../controllers/entrevista.controller.js");
 
 router.use((req, res, next) => {
     const start = Date.now();
