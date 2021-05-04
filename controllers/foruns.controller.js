@@ -1,24 +1,42 @@
 const db = require("../models/db.js");
 const Foruns = db.forum;
 
-const { Op } = require("sequelize")
+const { Op, where } = require("sequelize")
 
 
 exports.findByUser=(req,res)=>{
-  Foruns.findByUser(req.params.userID)
+  console.log(req.query.text)
+  if (req.query.text) {
+    console.log("entrou")
+    //if contem o codigo para a rota /foruns/:userId?text=:searchText
+    Foruns.findAndCountAll({ where: { id_user: req.params.userID, titulo:{ [Op.like]:'%'+req.query.text+'%'}}})
   .then(data => {
-    if (data === null)
-      res.status(404).json({
-        message: `Not found forum for user id  ${req.params.userID}.`
-      });
-    else
-      res.json(data);
+    // convert response data into custom format
+    res.status(200).json(data);
   })
   .catch(err => {
     res.status(500).json({
-      message: `Error retrieving forums for user id  ${req.params.userID}.`
+      message:
+        err.message || "Some error occurred while retrieving forum."
     });
   });
+  }
+  else{
+    Foruns.findAll({where: {id_user:req.params.userID}})
+    .then(data => {
+      if (data === null)
+        res.status(404).json({
+          message: `Not found forum for user id  ${req.params.userID}.`
+        });
+      else
+        res.json(data);
+    })
+    .catch(err => {
+      res.status(500).json({
+        message: `Error retrieving forums for user id  ${req.params.userID}.`
+      });
+    });
+  }
 }
 
 exports.findAll = (req, res) => {

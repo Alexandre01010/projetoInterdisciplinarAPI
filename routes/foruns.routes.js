@@ -1,7 +1,7 @@
 const express = require('express');
 let router = express.Router();
 const forunsController = require("../controllers/foruns.controller.js");
-
+const temasController = require("../controllers/temas.controller.js");
 router.use((req, res, next) => {
     const start = Date.now();
     res.on("finish", () => { //finish event is emitted once the response is sent to the client
@@ -10,8 +10,18 @@ router.use((req, res, next) => {
     });
     next()
 })
+router.route('/temas/:temaID')
+    .get(temasController.findByID)
+    .put(temasController.update)
+
+
+router.route('/:forumID/temas')
+    .get(temasController.findByForum)
+    .post(temasController.create)
+
+//conlcuir quando houver users
 router.route('/:userID')
-        .get(forunsController.findByUser)
+    .get(forunsController.findByUser)
 router.route('/')
     .get(forunsController.findAll)
     .post(forunsController.create)

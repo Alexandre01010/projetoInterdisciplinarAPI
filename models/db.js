@@ -25,6 +25,7 @@ db.user = require("./users.model.js")(sequelize, DataTypes);
 db.forum = require("./foruns.model.js")(sequelize, DataTypes);
 //db.foruns.belongsTo(db.propostas);
 db.candidatura = require("./candidaturas.model.js")(sequelize, DataTypes);
+db.tema = require("./temas.model.js")(sequelize, DataTypes);
 //define the 1:N relationship
 //db.proposta.hasMany(db.candidatura); // tutorialId is added into Comment model as FK
 //db.candidatura.belongsTo(db.proposta);
