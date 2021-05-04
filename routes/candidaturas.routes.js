@@ -22,6 +22,9 @@ router.route('/:proposalID')
 router.route('/')
     .get(candidaturaController.getCandidaturas)
 
+router.route('/:userID')
+    .get(candidaturaController.getOneCandidatura)
+
 
 // //send a predefined error message for invalid routes on TUTORIALS
 router.all('*', function (req, res) {

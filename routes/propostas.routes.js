@@ -25,7 +25,7 @@ router.route('/?type=:tipo&state=:estado&text=:searchText')
 
 //router.route('/candidaturas', require('./candidaturas.routes'))
 
-//router.route('/:proposalID/candidaruras', require('./candidaturas.routes'))
+router.use('/:proposalID/candidaturas', require('./candidaturas.routes'))
     
 // //send a predefined error message for invalid routes on TUTORIALS
 router.all('*', function (req, res) {
