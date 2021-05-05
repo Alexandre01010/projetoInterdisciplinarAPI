@@ -1,6 +1,6 @@
 const express = require('express');
 let router = express.Router();
-//const estadoRouter = require("./estados.routes");
+const participantesRouter = require("./participantes.routes.js");
 const entrevistasController = require("../controllers/entrevistas.controller.js");
 
 router.use((req, res, next) => {
@@ -20,13 +20,9 @@ router.route('/:idEntrevista')
 
 
 
-//participants part WIP  need to be n:m relationship, reseach that !
-/*router.route('/:idEntrevista/participantes')
-    .get(entrevistasController.findParticipantes)
-    .post(entrevistasController.createParticipante)
-router.route('/:idEntrevista/participantes/:idParticipante')
-    .delete(entrevistasController.deleteParticipante)
-*/
+//participants part n:m relationship, nest rounter by attaching them as middleware
+router.use('/:idEntrevista/participantes', participantesRouter)
+
 
 
     

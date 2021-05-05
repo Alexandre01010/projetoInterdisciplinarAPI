@@ -48,7 +48,11 @@ db.tema = require("./temas.model.js")(sequelize, DataTypes);
 // db.proposta.hasMany(db.candidatura)
 
 //entrevitas relations commenting this inorder to test just the entrevistas
+db.participante = require("./participantes.model.js")(sequelize, DataTypes);
+// n:m entrevista:user 
 db.entrevista = require("./entrevistas.model.js")(sequelize, DataTypes);
+db.entrevista.belongsToMany(db.user ,{through: db.participante})
+db.user.belongsToMany(db.entrevista ,{through: db.participante})
 
 
 
