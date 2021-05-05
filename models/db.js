@@ -34,9 +34,6 @@ db.tema = require("./temas.model.js")(sequelize, DataTypes);
 //entre propostas e usaers belongtoMany
 //foreign key here
 
-// db.proposta.hasMany(db.candidatura)
-// db.candidatura.belongsTo(db.proposta)
-//db.user
 
 // db.user.belongsToMany(db.proposta, { through: db.candidatura, sourceKey: 'id_user', targetKey: 'id_proposta'})
 // db.proposta.belongsToMany(db.user, { through: db.candidatura, sourceKey: 'id_proposta', targetKey: 'id_user'})
