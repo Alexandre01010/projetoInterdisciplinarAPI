@@ -22,6 +22,11 @@ router.route('/:proposalID')
 router.route('/')
     .get(candidaturaController.getCandidaturas)
 
+router.route('/associdadas')
+    .get(candidaturaController.getByProposal)
+
+
+
 router.route('/:userID')
     .get(candidaturaController.getOneCandidatura)
 
