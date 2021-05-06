@@ -34,12 +34,14 @@ db.tema = require("./temas.model.js")(sequelize, DataTypes);
 //entre propostas e usaers belongtoMany
 //foreign key here
 
-// db.proposta.hasMany(db.candidatura)
-// db.candidatura.belongsTo(db.proposta)
-//db.user
 
-// db.user.belongsToMany(db.proposta, { through: db.candidatura, sourceKey: 'id_user', targetKey: 'id_proposta'})
-// db.proposta.belongsToMany(db.user, { through: db.candidatura, sourceKey: 'id_proposta', targetKey: 'id_user'})
+db.user.belongsToMany(db.proposta, { through: db.candidatura, foreignKey: 'id_user', otherKey: 'id_proposta'})
+db.proposta.belongsToMany(db.user, { through: db.candidatura, foreignKey: 'id_proposta', otherKey: 'id_user'})
+
+
+
+// db.user.belongsToMany(db.proposta, { through: db.candidatura})
+// db.proposta.belongsToMany(db.user, { through: db.candidatura})
 
 
 
@@ -48,7 +50,11 @@ db.tema = require("./temas.model.js")(sequelize, DataTypes);
 // db.proposta.hasMany(db.candidatura)
 
 //entrevitas relations commenting this inorder to test just the entrevistas
+db.participante = require("./participantes.model.js")(sequelize, DataTypes);
+// n:m entrevista:user 
 db.entrevista = require("./entrevistas.model.js")(sequelize, DataTypes);
+db.entrevista.belongsToMany(db.user ,{through: db.participante, foreignKey: 'id_agenda', otherKey: 'id_user'})
+db.user.belongsToMany(db.entrevista ,{through: db.participante, foreignKey: 'id_user', otherKey: 'id_agenda'})
 
 
 
