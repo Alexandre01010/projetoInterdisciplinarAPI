@@ -1,6 +1,7 @@
 const express = require('express');
 let router = express.Router();
 const entrevistasController = require("../controllers/entrevistas.controller.js");
+const { route } = require('./candidaturas.routes.js');
 
 router.use((req, res, next) => {
     const start = Date.now();
@@ -11,7 +12,7 @@ router.use((req, res, next) => {
     next()
 })
 
-router.route('/')
+router.route('/')    
     .get(entrevistasController.findAllEntrevista)
     .post(entrevistasController.createEntrevista)
 router.route('/:idEntrevista')
@@ -24,7 +25,9 @@ router.route('/:idEntrevista/participantes')
 router.route('/:idEntrevista/participantes/:idParticipante')
     .put(entrevistasController.addParticipante) 
     .delete(entrevistasController.deleteParticipante)
-
+/*    
+router.route('/entrevistas?idUser=:loggedUser&text=:searchText&cargo=:selectedCargo')
+    .get(entrevistasController.findEntrevistaFilterd) */
 
 
 

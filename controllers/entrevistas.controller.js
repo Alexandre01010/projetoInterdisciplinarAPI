@@ -2,12 +2,12 @@ const db = require("../models/db.js");
 const Entrevistas = db.entrevista;
 const User = db.user;
 
-const { Op } = require("sequelize");
+const { Op, where } = require("sequelize");
 const { user, entrevista } = require("../models/db.js");
 
 
 //-------------- For route => '/'  ---------------------------------
-
+//get all entrevistas for testing purpases
 exports.findAllEntrevista = (req, res) => {        
     Entrevistas.findAll()
         .then(data => {
@@ -26,6 +26,57 @@ exports.findAllEntrevista = (req, res) => {
         });
 };
 
+/*
+exports.findEntrevistaFilterd = (req,res) => {
+    ///entrevistas?idUser=:loggedUser&text=:searchText&cargo=:selectedCargo
+    // idUser = :loggedUser -> user logged in with associated interviews 
+    // text = :searchText -> text from the search bar
+    // cargo = :selectedCargo -> the type of the user incharge of the inter view
+
+    // steps to do the filter -> 
+    //1 -search entrevista assosiated to the logged in user
+    //2 - check if the text is blank or not, it cannot blanked
+    //3 - check if the user inchage of the entrevista is the the type selected , canot be blacked
+    //4 - res.json(data)
+
+    Entrevistas.findAll()
+        .then(data => {
+            if (data === null)
+                res.status(404).json({
+                    message: `No Entrevistas where found at ${req}.`
+                });
+            else{
+                
+                User.findByPk(req.params.loggedUser)
+                    .then(user => {
+                        // no data returned means there is no User in DB with that given ID 
+                        if (user === null)
+                            res.status(404).json({
+                                message: `Not found User with id ${req.params.loggedUser}.`
+                            });
+                        else {
+                            
+                            
+                            
+                        }
+                    })
+                
+
+            }
+        })
+        .catch(err => {
+            res.status(500).json({
+                message:
+                    err.message || "Some error occurred while retrieving the Entrevistas."
+            });
+        });
+
+        
+
+
+
+
+}*/
 exports.createEntrevista = (req, res) => {
     
     Entrevistas.create(req.body)
