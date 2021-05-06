@@ -13,10 +13,14 @@ router.use((req, res, next) => {
 })
 
 router.route('/')
-    .get(usersController.findAllUsers)
+    .get(usersController.findByType)
     .post(usersController.createUser)
-
     
+router.route('/:userID')    
+    .get(usersController.findUser)
+    .put(usersController.editUser)
+    .delete(usersController.deleteUser)
+
 
 router.all('*', function (req, res) {
     res.status(404).json({ message: 'Users: Not Found' });
