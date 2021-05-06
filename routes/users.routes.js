@@ -14,6 +14,9 @@ router.use((req, res, next) => {
 
 router.route('/')
     .get(usersController.findAllUsers)
+    .post(usersController.createUser)
+
+    
 
 router.all('*', function (req, res) {
     res.status(404).json({ message: 'Users: Not Found' });
