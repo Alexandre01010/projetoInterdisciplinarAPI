@@ -1,5 +1,6 @@
 const db = require("../models/db.js");
 const Proposta = db.proposta;
+const candidaturaVar = db.candidatura
 
 const { Op } = require("sequelize")
 
