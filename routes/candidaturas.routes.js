@@ -22,13 +22,14 @@ router.route('/:proposalID')
 router.route('/')
     .get(candidaturaController.getCandidaturas)
 
-router.route('/associdadas')
+router.route('/associadas')
     .get(candidaturaController.getByProposal)
 
 
 
 router.route('/:userID')
     .get(candidaturaController.getOneCandidatura)
+    //.put(candidaturaController.updateCandidatura)
 
 
 // //send a predefined error message for invalid routes on TUTORIALS

@@ -149,3 +149,31 @@ exports.getOneCandidatura = (req, res) =>{
     }
   })
 }
+
+exports.getByProposal = (req, res) => {
+  Proposta.findByPk(req.params.proposalID)
+  .then((prop) => {
+    if(prop === null){
+      res.status(404).json({
+        message: "Não foi encontrado uma proposta com o id " + req.params.proposalID
+      })
+    }else{
+      Candidaturas.findAll({ where: {id_proposta: req.params.proposalID} })
+      .then((candidatura) => {
+        if(candidatura.length == 0){
+          res.status(404).json({
+            message: "Não existe ainda nenhuma candidatura associada à proposta com o id " + req.params.proposalID
+          })
+        }else{
+          res.status(200).json(candidatura)
+        }
+      })
+      .catch((err) => {
+        res.status(500).json({
+          message: err.message || "Some error occurred while retrieving tutorials"
+        })
+      })
+
+    }
+  })
+}
