@@ -12,7 +12,7 @@ exports.getCandidaturas = (req, res) => {
     .catch((err) => {
       res.status(500).json({
         message:
-          err.message || "Some error occurred while retrieving proposals",
+          err.message || "Ocorreu um erro ao encontrar candidaturas",
       });
     });
 }
@@ -49,7 +49,7 @@ exports.createCandidatura = (req, res) => {
                       res.status(500).json({ message: "Já existe uma candidatura para o user " + req.body.id_user + " na proposta " + req.params.proposalID })
                     } else {
                       res.status(500).json({
-                        message: err || "Error creating candidatura on proposal with id " + req.params.proposalID
+                        message: err || "Ocorreu um erro ao criar uma candidatura à proposta " + req.params.proposalID
                       })
                     }
                   }
@@ -87,7 +87,7 @@ exports.getOneCandidatura = (req, res) =>{
           })
           .catch((err) => {
             res.status(500).json({
-              message: err || "Some error occurred while retrieving tutorials"
+              message: err || "Ocorreu um erro ao encontrar uma candidatura"
             })
           })
         }
@@ -116,7 +116,7 @@ exports.getByProposal = (req, res) => {
       })
       .catch((err) => {
         res.status(500).json({
-          message: err.message || "Some error occurred while retrieving tutorials"
+          message: err.message || "Ocorreu um erro ao encontrar uma candidatura"
         })
       })
 
