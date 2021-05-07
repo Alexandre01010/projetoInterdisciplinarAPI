@@ -29,7 +29,8 @@ router.route('/associadas')
 
 router.route('/:userID')
     .get(candidaturaController.getOneCandidatura)
-    //.put(candidaturaController.updateCandidatura)
+    .put(candidaturaController.updateCandidatura)
+    .delete(candidaturaController.deleteCandidatura)
 
 
 // //send a predefined error message for invalid routes on TUTORIALS

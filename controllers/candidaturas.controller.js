@@ -1,3 +1,4 @@
+const { candidatura } = require("../models/db.js");
 const db = require("../models/db.js");
 const Candidaturas = db.candidatura;
 const Proposta = db.proposta;
@@ -177,3 +178,58 @@ exports.getByProposal = (req, res) => {
     }
   })
 }
+
+exports.updateCandidatura = (req, res) => {
+  Candidaturas.update(req.body, { where: { id_proposta: req.params.proposalID, id_user: req.params.userID } })
+  .then((data) => {
+    if(data == 1){
+      res.json({
+        message: "Candidatura do utilizador " + req.params.userID + " à proposta " + req.params.proposalID + " foi alterada com sucesso"
+      })
+    }else{
+      res.status(404).json({
+        message: "Não foi encontrada nenhuma candidatura do utilizador " + req.params.userID + " à proposta " + req.params.proposalID
+      })
+    }
+  })
+  .catch((err) => {
+    res.status(500).json({
+      message: "Ocorreu um erro ao alterar a candidatura à proposta " + req.params.proposalID + " para o utilizador " + req.params.userID
+    })
+  })
+}
+
+exports.deleteCandidatura = (req, res) => {
+  Proposta.findByPk(req.params.proposalID)
+  .then((prop) => {
+    if(prop === null){
+      res.status(404).json({
+        message: "Proposta " + req.params.proposalID + " não existe"
+      })
+    }else{
+      User.findByPk(req.params.userID)
+      .then((user) => {
+        if(user === null){
+          res.status(404).json({
+            message: "Não existe nenhuma candidatura do user " + req.params.userID + " à proposta " + req.params.proposalID
+          })
+        }else{
+          Candidaturas.destroy({ where: { id_proposta: req.params.proposalID, id_user: req.params.userID } })
+          .then((data) => {
+            if(data == 1){
+              res.status(200).json({
+                message: "Candidatura do user " + req.params.userID + " à proposta " + req.params.proposalID + " foi eliminada com sucesso"
+              })
+            }
+          })
+          .catch((err) => {
+            res.status(500).json({
+              message: "Ocorreu um erro ao eliminar a candidatura"
+            })
+          })
+        }
+      })
+    }
+  })
+}
+
