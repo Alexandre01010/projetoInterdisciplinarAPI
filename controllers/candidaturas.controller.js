@@ -125,7 +125,7 @@ exports.getByProposal = (req, res) => {
 }
 
 exports.updateCandidatura = (req, res) => {
-  Candidaturas.update(req.body, { where: { id_proposta: req.params.proposalID, id_user: req.params.userID } })
+  Candidaturas.update({id_user: req.params.userID, mensagem: req.body.mensagem, id_tipo_estado: req.body.id_tipo_estado, n_ordem_escolha: req.body.n_ordem_escolha}, { where: { id_proposta: req.params.proposalID, id_user: req.params.userID } })
   .then((data) => {
     if(data == 1){
       res.json({
