@@ -16,7 +16,6 @@ router.use((req, res, next) => {
 })
 
 router.route('/:proposalID')
-   // .get(candidaturaController.getCandidaturas)
     .post(candidaturaController.createCandidatura)
 
 router.route('/')
