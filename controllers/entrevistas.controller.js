@@ -96,7 +96,7 @@ exports.createEntrevista = (req, res) => {
 //----------------------------- For route => '/:idEntrevista'
 exports.updateEntrevista = (req, res) => {
     // validate request body data
-    if (!req.body) {
+    if (!req.body || !req.body.type) {
         res.status(400).json({ message: "Os dados não podem estar vazios!" });
         return;
     }

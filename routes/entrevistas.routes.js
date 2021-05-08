@@ -23,7 +23,7 @@ router.route('/:idEntrevista')
 router.route('/:idEntrevista/participantes')
     .get(entrevistasController.findParticipantes)
 router.route('/:idEntrevista/participantes/:idParticipante')
-    .put(entrevistasController.addParticipante) 
+    .post(entrevistasController.addParticipante) 
     .delete(entrevistasController.deleteParticipante)
 /*    
 router.route('/entrevistas?idUser=:loggedUser&text=:searchText&cargo=:selectedCargo')
