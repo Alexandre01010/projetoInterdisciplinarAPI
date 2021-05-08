@@ -20,9 +20,6 @@ router.route('/:proposalID')
     .delete(propostasController.deleteProposal)
     .get(propostasController.getOne)
 
-router.route('/?type=:tipo&state=:estado&text=:searchText')
-    .get(propostasController.findFiltered)
-
 //router.route('/candidaturas', require('./candidaturas.routes'))
 
 router.use('/:proposalID/candidaturas', require('./candidaturas.routes'))
