@@ -7,23 +7,29 @@ module.exports = (sequelize, DataTypes) => {
         },
         titulo: {
             type: DataTypes.STRING,
-            allowNull: true //adds NOT NULL to the column
+            allowNull: false //adds NOT NULL to the column
+            
         },
         id_proposta: {
-            type: DataTypes.INTEGER
+            type: DataTypes.INTEGER,
+            allowNull: true
         },
         id_user: {
-            type: DataTypes.INTEGER
+            type: DataTypes.INTEGER,
+            allowNull: false
         },
 
         data_hora: {
-            type: DataTypes.DATE
+            type: DataTypes.DATE,
+            allowNull: true
         },
         gostos: {
-            type: DataTypes.INTEGER
+            type: DataTypes.INTEGER,
+            allowNull: false
         },
         texto: {
-            type: DataTypes.TEXT
+            type: DataTypes.TEXT,
+            allowNull: false
         }
     }, {
         timestamps: false,
