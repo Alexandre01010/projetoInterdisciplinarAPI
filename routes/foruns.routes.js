@@ -13,6 +13,7 @@ router.use((req, res, next) => {
 router.route('/temas/:temaID')
     .get(temasController.findByID)
     .put(temasController.update)
+    .delete(temasController.delete)
 
 
 router.route('/:forumID/temas')
