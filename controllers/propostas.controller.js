@@ -12,7 +12,7 @@ exports.findAllProposal = (req, res) => {
     .catch((err) => {
       res.status(500).json({
         message:
-          err.message || "Some error occurred while retrieving proposals",
+          err.message || "Ocorreu um erro ao encontrar propostas",
       });
     });
 }
@@ -29,7 +29,7 @@ exports.create = (req, res) => {
         res.status(400).json({ message: err.errors[0].message });
       else
         res.status(500).json({
-          message: err.message || "Some error occurred while creating the Proposta."
+          message: err.message || "Ocorreu um erro ao criar a proposta."
         });
     });
 };
@@ -39,49 +39,48 @@ exports.deleteProposal = (req, res) => {
     .then(num => {
       if (num == 1) {
         res.status(200).json({
-          message: `Tutorial with id ${req.params.proposalID} was successfully deleted!`
+          message: `A proposta com o id ${req.params.proposalID} foi apagada com sucesso!`
         });
       } else {
         res.status(404).json({
-          message: `Not found Tutorial with id=${req.params.proposalID}.`
+          message: `Não foi encontrada nenhuma proposta com o id=${req.params.proposalID}.`
         });
       }
     })
     .catch(err => {
       res.status(500).json({
-        message: `Error deleting Tutorial with id=${req.params.proposalID}.`
+        message: `Ocorreu um erro ao apagar a proposta com o id=${req.params.proposalID}.`
       });
     });
 };
 
 exports.getOne = (req, res) => {
-  // obtains only a single entry from the table, using the provided primary key
   Proposta.findByPk(req.params.proposalID)
     .then(data => {
       if (data === null)
         res.status(404).json({
-          message: `Not found Tutorial with id ${req.params.proposalID}.`
+          message: `Não foi encontrada nenhuma proposta com o id ${req.params.proposalID}.`
         });
       else
         res.json(data);
     })
     .catch(err => {
       res.status(500).json({
-        message: `Error retrieving Tutorial with id ${req.params.proposalID}.`
+        message: `Ocorreu um erro ao encontrar a proposta com o id ${req.params.proposalID}.`
       });
     });
 };
 
-exports.findFiltered = (req, res) => {
-  Proposta.findAndCountAll({ where: { email: req.params.type, id_tipo_estado: req.params.state, titulo: req.params.searchText}})
-    .then(data => {
-      const response = getPagingData(data, offset, limit);
-      res.status(200).json(response);
-    })
-    .catch(err => {
-      res.status(500).json({
-        message:
-          err.message || "Some error occurred while retrieving tutorials."
-      });
-    });
-};
+// exports.findFiltered = (req, res) => {
+//   Proposta.findAndCountAll({ where: { email: req.params.type, id_tipo_estado: req.params.state, titulo: req.params.searchText}})
+//     .then(data => {
+//       const response = getPagingData(data, offset, limit);
+//       res.status(200).json(response);
+//     })
+//     .catch(err => {
+//       res.status(500).json({
+//         message:
+//           err.message || "Some error occurred while retrieving proposals."
+//       });
+//     });
+// };

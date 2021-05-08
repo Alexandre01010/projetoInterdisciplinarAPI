@@ -1,30 +1,49 @@
+const { tema } = require("../models/db.js");
 const db = require("../models/db.js");
 const Tema = db.tema;
 const Forum = db.forum;
+
+exports.delete=(req,res)=>{
+  Tema.destroy({ where: { id_tema: req.params.temaID } })
+    .then(num => {
+      if (num == 1) {
+        res.status(200).json({
+          message: `Tema com id ${req.params.temaID} foi eliminado!`
+        });
+      } else {
+        res.status(404).json({
+          message: `Nao foi encontrado nenhum tema com id=${req.params.temaID}.`
+        });
+      }
+    })
+    .catch(err => {
+      res.status(500).json({
+        message: `Erro ao eliminar tema com id=${req.params.temaID}.`
+      });
+    });
+
+}
+
+
 
 exports.update = (req, res) => {
   // validate request body data
   if (
     !req.body ||
     !req.body.titulo ||
-    !req.body.id_forum ||
     !req.body.id_user
   ) {
-    res.status(400).json({ message: "Request body can not be empty!" });
+    res.status(400).json({ message: "Existem campos vazios na mensagem" });
     return;
   }
 
   Tema.findByPk(req.params.temaID)
     .then((data) => {
-      if (data === null && Number.isInteger(req.params.temaID))
+      if (data === null)
         res.status(404).json({
           message: `Não foi encontrado nenhum tema for tema com id  ${req.params.temaID}.`,
         });
-      else if (data === null && !Number.isInteger(req.params.temaID)) {
-        res.status(404).json({
-          message: `Tema id tem de ser numérico.`,
-        });
-      } else {
+      else {
         Tema.update(req.body, { where: { id_tema: req.params.temaID } }).then(
           (num) => {
             // check if one comment was updated (returns 0 if no data was updated)
@@ -51,14 +70,11 @@ exports.update = (req, res) => {
 exports.findByID = (req, res) => {
   Tema.findByPk(req.params.temaID)
     .then((data) => {
-      if (data === null && Number.isInteger(req.params.temaID))
+      if (data === null){
         res.status(404).json({
           message: `Não foram encontrados temas para tema  ${req.params.temaID}.`,
         });
-      else if (data === null && !Number.isInteger(req.params.temaID)) {
-        res.status(404).json({
-          message: `tema id tem de ser numérico .`,
-        });
+      
       } else res.json(data);
     })
     .catch((err) => {
@@ -78,6 +94,7 @@ exports.findByForum = (req, res) => {
     } else {
       Tema.findAll({ where: { id_forum: req.params.forumID } })
         .then((data) => {
+          console.log(data)
           if (data === null || data.length == 0)
             res.status(404).json({
               message: `Não foram encontrados temas para forumID  ${req.params.forumID}.`,
