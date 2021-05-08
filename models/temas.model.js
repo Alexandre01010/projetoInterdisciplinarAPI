@@ -11,10 +11,12 @@ module.exports = (sequelize, DataTypes) => {
             allowNull: true //adds NOT NULL to the column
         },
         id_user: {
-            type: DataTypes.INTEGER
+            type: DataTypes.INTEGER,
+            allowNull: false
         },
         titulo: {
-            type: DataTypes.TEXT
+            type: DataTypes.TEXT,
+            allowNull: false
         },
 
         
