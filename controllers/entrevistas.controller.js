@@ -81,7 +81,7 @@ exports.createEntrevista = (req, res) => {
 
     Entrevistas.create(req.body)
         .then(data => {
-            res.status(201).json({ message: "Nova entrevista criada", location: "/entrevistas/" + data.id_entrevista });
+            res.status(201).json({ message: "Nova entrevista criada", location: "/entrevistas/" + req.body.id_agenda });
         })
         .catch(err => {
             if (err.name === 'SequelizeValidationError')
@@ -144,7 +144,7 @@ exports.findParticipantes = (req, res) => {
         .then(data => {
             if (data === null)
                 res.status(404).json({
-                    message: `Não foi encontrada uma entrevista com o id ${req.params.idEntrevistav}.`
+                    message: `Não foi encontrada uma entrevista com o id ${req.params.idEntrevista}.`
                 });
             else
                 res.status(200).json(data);

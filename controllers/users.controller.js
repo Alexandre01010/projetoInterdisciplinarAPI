@@ -80,9 +80,15 @@ exports.deleteUser = (req, res) => {
       }
     })
     .catch(err => {
-      res.status(500).json({
-        message: `Ocorreu um erro ao tentar eliminar o utilizador com id=${req.params.userID}.`
-      });
+      if(err.name === "SequelizeForeignKeyConstraintError"){
+        res.status(500).json({
+          message: "Não foi possivel eliminar o utilizador " + req.params.userID + " pois tem candidaturas associadas"
+        })
+      }else{
+        res.status(500).json({
+          message: "Ocorreu um erro ao eliminar o utilizador " + req.params.userID
+        })
+      }
     });
 };
 
