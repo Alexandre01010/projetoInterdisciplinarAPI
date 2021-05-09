@@ -7,7 +7,13 @@ const User = db.user;
 exports.getCandidaturas = (req, res) => {
   Candidaturas.findAll(req.body)
     .then(data => {
-      res.status(200).json(data);
+      if(data.length == 0){
+        res.status(404).json({
+          message: "Não existe ainda candidaturas efetudas"
+        })
+      }else{
+        res.status(200).json(data)
+      }
     })
     .catch((err) => {
       res.status(500).json({
