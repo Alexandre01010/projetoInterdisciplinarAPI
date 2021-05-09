@@ -40,25 +40,54 @@ exports.create = (req, res) => {
     });
 };
 
+// exports.deleteProposal = (req, res) => {
+//   Proposta.destroy({ where: { id_proposta: req.params.proposalID } })
+//     .then(num => {
+//       if (num == 1) {
+//         res.status(200).json({
+//           message: `A proposta com o id ${req.params.proposalID} foi apagada com sucesso!`
+//         });
+//       } else {
+        
+//         res.status(404).json({
+//           message: `Não foi encontrada nenhuma proposta com o id ${req.params.proposalID}.`
+//         });
+//       }
+//     })
+//     .catch(err => {
+//       res.status(500).json({
+//         message: `Ocorreu um erro ao apagar a proposta com o id ${req.params.proposalID}.`
+//       });
+//     });
+// };
+
 exports.deleteProposal = (req, res) => {
-  Proposta.destroy({ where: { id_proposta: req.params.proposalID } })
-    .then(num => {
-      if (num == 1) {
-        res.status(200).json({
-          message: `A proposta com o id ${req.params.proposalID} foi apagada com sucesso!`
-        });
-      } else {
+  Proposta.findByPk(req.params.proposalID)
+    .then((prop) => {
+      if (prop === null) {
         res.status(404).json({
-          message: `Não foi encontrada nenhuma proposta com o id=${req.params.proposalID}.`
-        });
+          message: "Proposta " + req.params.proposalID + " não existe"
+        })
+      } else {
+        Proposta.destroy({ where: { id_proposta: req.params.proposalID} })
+        .then((data) => {
+          if (data == 1) {
+            res.status(200).json({
+              message: "Proposta " + req.params.proposalID + " foi eliminada com sucesso"
+            })
+          }
+        })
+        .catch((err) => {
+          if(err.name === "SequelizeForeignKeyConstraintError"){
+            res.status(500).json({
+              message: "Não foi possivel eliminar a proposta com id " + req.params.proposalID + " pois tem candidaturas associadas"
+            })
+          }
+          
+        })
       }
     })
-    .catch(err => {
-      res.status(500).json({
-        message: `Ocorreu um erro ao apagar a proposta com o id=${req.params.proposalID}.`
-      });
-    });
-};
+}
 
 exports.getOne = (req, res) => {
   Proposta.findByPk(req.params.proposalID)
