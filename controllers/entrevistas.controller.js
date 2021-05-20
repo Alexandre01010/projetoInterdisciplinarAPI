@@ -1,6 +1,7 @@
 const db = require("../models/db.js");
 const Entrevistas = db.entrevista;
 const User = db.user;
+const Role = db.role;
 
 const { Op, where } = require("sequelize");
 const { user, entrevista } = require("../models/db.js");
@@ -31,30 +32,59 @@ exports.findEntrevistaFilterd = (req,res) => {
     ///entrevistas?idUser=:loggedUser&text=:searchText&cargo=:selectedCargo
     // idUser = :loggedUser -> user logged in with associated interviews 
     // text = :searchText -> text from the search bar
-    // cargo = :selectedCargo -> the type of the user incharge of the inter view
+    // cargo = :selectedCargo -> the type of the user incharge of the interview
 
     // steps to do the filter -> 
-    //1 -search entrevista assosiated to the logged in user
+    //1 -search entrevista assosiated to the logged in user (check user id in the looged token info?)
     //2 - check if the text is blank or not, it cannot blanked
     //3 - check if the user inchage of the entrevista is the the type selected , canot be blacked
     //4 - res.json(data)
 
+
+    // get and verify if the user is loggedin and get its id
+
+    let token = req.headers["x-access-token"];
+
+    if (!token) {
+        return res.status(403).send({
+            message: "No token provided!"
+        });
+    }
+    // verify request token given the JWT secret key
+    jwt.verify(token, config.secret, (err, decoded) => {
+        if (err) {
+            return res.status(401).send({ message: "Unauthorized!" });
+        }
+        req.loggedUserId = decoded.id; // save user ID for future verifications
+        next();
+    });
+
+
+
+    // after validations get the entrevistas then start to filter through parts
     Entrevistas.findAll()
-        .then(data => {
-            if (data === null)
+        .then(entrevista => {
+            if (entrevista === null)
                 res.status(404).json({
                     message: `No Entrevistas where found at ${req}.`
                 });
             else{
                 
-                User.findByPk(req.params.loggedUser)
+                User.findByPk(req.loggedUserId )
                     .then(user => {
                         // no data returned means there is no User in DB with that given ID 
                         if (user === null)
                             res.status(404).json({
-                                message: `Not found User with id ${req.params.loggedUser}.`
+                                message: `Not found User with id ${req.loggedUserId}.`
                             });
                         else {
+                            //checking the role of the user now acording ot the filter
+                            Role.find
+
+
+                            
+
+                            
                             
                             
                             
@@ -76,7 +106,9 @@ exports.findEntrevistaFilterd = (req,res) => {
 
 
 
-}*/
+}
+*/
+
 exports.createEntrevista = (req, res) => {
 
     Entrevistas.create(req.body)

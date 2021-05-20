@@ -13,8 +13,8 @@ router.use((req, res, next) => {
 })
 
 router.route('/')
-    .get(notificacoesController.findAllNotifications)
     .post(notificacoesController.createNotification)
+    .get(notificacoesController.findNotificationsFiltered)
 
 router.route('/:notificationID')
     .put(notificacoesController.editNotification)
