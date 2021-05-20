@@ -26,6 +26,7 @@ db.forum = require("./foruns.model.js")(sequelize, DataTypes);
 //db.foruns.belongsTo(db.propostas);
 db.candidatura = require("./candidaturas.model.js")(sequelize, DataTypes);
 db.tema = require("./temas.model.js")(sequelize, DataTypes);
+db.typeUser = require("./tipoUser.model.js")(sequelize, DataTypes)
 
 //relation n:m between user and proposal, that results on candidaturas table
 db.user.belongsToMany(db.proposta, { through: db.candidatura, foreignKey: 'id_user', otherKey: 'id_proposta'})
@@ -37,6 +38,9 @@ db.participante = require("./participantes.model.js")(sequelize, DataTypes);
 db.entrevista = require("./entrevistas.model.js")(sequelize, DataTypes);
 db.entrevista.belongsToMany(db.user ,{through: db.participante, foreignKey: 'id_agenda', otherKey: 'id_user'})
 db.user.belongsToMany(db.entrevista ,{through: db.participante, foreignKey: 'id_user', otherKey: 'id_agenda'})
+
+db.user.hasOne(db.typeUser)
+db.typeUser.hasMany(db.user)
 
 
 
