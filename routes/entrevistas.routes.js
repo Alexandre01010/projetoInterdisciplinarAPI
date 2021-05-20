@@ -26,7 +26,7 @@ router.route('/:idEntrevista/participantes/:idParticipante')
     .post(entrevistasController.addParticipante) 
     .delete(entrevistasController.deleteParticipante)
 /*    
-router.route('/entrevistas?idUser=:loggedUser&text=:searchText&cargo=:selectedCargo')
+router.route('/entrevistas?text=:searchText&cargo=:selectedCargo')
     .get(entrevistasController.findEntrevistaFilterd) */
 
 

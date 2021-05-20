@@ -28,7 +28,7 @@ exports.findAllEntrevista = (req, res) => {
 };
 
 /*
-exports.findEntrevistaFilterd = (req,res) => {
+exports.findEntrevistaFilterd = async(req,res) => {
     ///entrevistas?idUser=:loggedUser&text=:searchText&cargo=:selectedCargo
     // idUser = :loggedUser -> user logged in with associated interviews 
     // text = :searchText -> text from the search bar
@@ -43,71 +43,104 @@ exports.findEntrevistaFilterd = (req,res) => {
 
     // get and verify if the user is loggedin and get its id
 
-    let token = req.headers["x-access-token"];
+    
 
-    if (!token) {
-        return res.status(403).send({
-            message: "No token provided!"
-        });
-    }
-    // verify request token given the JWT secret key
-    jwt.verify(token, config.secret, (err, decoded) => {
-        if (err) {
-            return res.status(401).send({ message: "Unauthorized!" });
-        }
-        req.loggedUserId = decoded.id; // save user ID for future verifications
-        next();
-    });
+    
+        // after validations get the entrevistas then start to filter through parts
+        Entrevistas.findAll()
+            .then(entrevista => {
+                if (entrevista === null)
+                    res.status(404).json({
+                        message: `No Entrevistas where found at ${req}.`
+                    });
+                else{
+                    
+                    User.findByPk(req.loggedUserId )
+                        .then(user => {
+                            // no data returned means there is no User in DB with that given ID 
+                            if (user === null)
+                                res.status(404).json({
+                                    message: `Not found User with id ${req.loggedUserId}.`
+                                });
+                            else {
+                                //checking the role of the user now acording ot the filter
+                                Role.find
 
+                            }
+                        })
+                    
 
-
-    // after validations get the entrevistas then start to filter through parts
-    Entrevistas.findAll()
-        .then(entrevista => {
-            if (entrevista === null)
-                res.status(404).json({
-                    message: `No Entrevistas where found at ${req}.`
+                }
+            })
+            .catch(err => {
+                res.status(500).json({
+                    message:
+                        err.message || "Some error occurred while retrieving the Entrevistas."
                 });
-            else{
-                
-                User.findByPk(req.loggedUserId )
-                    .then(user => {
-                        // no data returned means there is no User in DB with that given ID 
-                        if (user === null)
-                            res.status(404).json({
-                                message: `Not found User with id ${req.loggedUserId}.`
-                            });
-                        else {
-                            //checking the role of the user now acording ot the filter
-                            Role.find
+            });
 
+   
 
-                            
+    try{
+        // first check the the entrevistas the looged user is a participate in
 
-                            
-                            
-                            
-                            
-                        }
-                    })
-                
-
+        let loggedUser = await Entrevistas.findAll({
+            where: {
+                id_user : req.loggedUserId
+            },
+            include: {
+                model: user,
+                through: { attributes: [] } //remove data retrieved from join table
             }
         })
-        .catch(err => {
-            res.status(500).json({
-                message:
-                    err.message || "Some error occurred while retrieving the Entrevistas."
-            });
+
+        if(loggedUser === null){
+            res.status(404).json({
+                message: `No Entrevistas where found with ${req.loggedUserId}.`
+            })
+        }
+
+        // after that check of those entrevistas check if the user_id of the entrevista is acording to therole
+
+        
+
+        // after all that check the text if there are any keywords matching the the text_agenda
+        //checking if its emphty
+        if(req.params.searchText === null){
+            res.status(404).json({
+                message: `search text cant be empthy !!.`
+            })
+        }
+
+
+        // finally return the results
+
+
+        
+
+
+
+        
+    }
+    catch{
+
+        res.status(500).json({
+            message:
+                err.message || "Some error occurred while retrieving the Entrevistas."
         });
+        
+    }
+
+
+
 
         
 
 
 
 
-}
-*/
+}*/
+
 
 exports.createEntrevista = (req, res) => {
 
