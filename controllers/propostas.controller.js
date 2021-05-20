@@ -89,6 +89,10 @@ exports.deleteProposal = (req, res) => {
     })
 }
 
+//Get de propostas falta a validação de que apenas pode retornas as rotas aprovadas
+
+//Entidades externas não podem ver propostas de entidade de externas
+
 exports.getOne = (req, res) => {
   Proposta.findByPk(req.params.proposalID)
     .then(data => {
