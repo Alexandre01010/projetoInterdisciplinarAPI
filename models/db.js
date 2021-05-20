@@ -27,7 +27,7 @@ db.forum = require("./foruns.model.js")(sequelize, DataTypes);
 db.candidatura = require("./candidaturas.model.js")(sequelize, DataTypes);
 db.tema = require("./temas.model.js")(sequelize, DataTypes);
 db.typeUser = require("./tipoUser.model.js")(sequelize, DataTypes)
-
+db.notificacao = require("./notificacoes.model.js")(sequelize, DataTypes)
 //relation n:m between user and proposal, that results on candidaturas table
 db.user.belongsToMany(db.proposta, { through: db.candidatura, foreignKey: 'id_user', otherKey: 'id_proposta'})
 db.proposta.belongsToMany(db.user, { through: db.candidatura, foreignKey: 'id_proposta', otherKey: 'id_user'})
