@@ -35,7 +35,7 @@ router.route('/entrevistas?idUser=:loggedUser&text=:searchText&cargo=:selectedCa
     
 // //send a predefined error message for invalid routes on Entrevista
 router.all('*', function (req, res) {
-    res.status(404).json({ message: 'Entrevista: what???' });
+    res.status(404).json({ message: 'Entrevista: Not Found' });
 })
 // EXPORT ROUTES (required by APP)
 module.exports = router;

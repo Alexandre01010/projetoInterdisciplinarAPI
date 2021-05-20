@@ -34,7 +34,7 @@ router.route('/:userID')
 
 // //send a predefined error message for invalid routes on TUTORIALS
 router.all('*', function (req, res) {
-    res.status(404).json({ message: 'CANDIDATURAS: what???' });
+    res.status(404).json({ message: 'Candidaturas: Not Found' });
 })
 // EXPORT ROUTES (required by APP)
 module.exports = router;
