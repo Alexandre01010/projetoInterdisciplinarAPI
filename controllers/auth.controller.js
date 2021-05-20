@@ -3,6 +3,7 @@ const bcrypt = require("bcryptjs");
 const config = require("../config/auth.config.js");
 const db = require("../models");
 const User = db.user;
+const Role = db.typeUser
 exports.signup = async (req, res) => {
     try {
         // check duplicate username
