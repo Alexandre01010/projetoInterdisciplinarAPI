@@ -13,9 +13,13 @@ exports.signup = async (req, res) => {
             return res.status(400).json({ message: "Failed! Username is already in use!" });
         // save User to database
         user = await User.create({
-            username: req.body.username,
+            nome: req.body.username,
             email: req.body.email,
-            password: bcrypt.hashSync(req.body.password, 8) // generates hash to password
+            password: bcrypt.hashSync(req.body.password, 8), // generates hash to password
+            id_tipo_user: req.body.id_tipo_user,
+            cv: req.body.cv,
+            foto: req.body.foto
+
         });
         if (req.body.role) {
             let role = await Role.findOne({ where: { name: req.body.role } });
