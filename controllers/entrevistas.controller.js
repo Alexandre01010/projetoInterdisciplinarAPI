@@ -27,50 +27,65 @@ exports.findAllEntrevista = (req, res) => {
         });
 };
 
-/*
-exports.findEntrevistaFilterd = async(req,res) => {
-    ///entrevistas?idUser=:loggedUser&text=:searchText&cargo=:selectedCargo
-    // idUser = :loggedUser -> user logged in with associated interviews 
+
+exports.findEntrevistaFilterd = (req,res) => {
+    ///entrevistas?text=:searchText&cargo=:selectedCargo
+    
     // text = :searchText -> text from the search bar
-    // cargo = :selectedCargo -> the type of the user incharge of the interview
+    // cargo = :selectedCargo -> the type of the user incharge of the interview , it has to be user types: 1 -docentes ,2 nao docentes ,3 alunos
 
-    // steps to do the filter -> 
-    //1 -search entrevista assosiated to the logged in user (check user id in the looged token info?)
-    //2 - check if the text is blank or not, it cannot blanked
-    //3 - check if the user inchage of the entrevista is the the type selected , canot be blacked
-    //4 - res.json(data)
+    // try getting the first part of the fitler , the textfield
+    const test_text = req.query.text;
+    const cargo_req = req.query.cargo //must comment line where getting just the title query parameter
+    console.log("heres the text: "+ test_text)
+    console.log("heres the cargo: " + cargo_req)
+    //for the most part the search will have to be changed, if we are looking for keywords in the description, then that need to be used diferently
 
-
-    // get and verify if the user is loggedin and get its id
-
-    
-
-    
-        // after validations get the entrevistas then start to filter through parts
-        Entrevistas.findAll()
+    //If there is something on the search text
+    if(req.query.text){
+        Entrevistas.findAndCountAll({
+            where: {  
+                // we will be putting the loggeduser id you get from the token here has well          
+                texto_agenda: { [Op.like]:  req.query.text  },
+                
+            }
+        })
+        
             .then(entrevista => {
-                if (entrevista === null)
+                if (entrevista === null||entrevista.count==0 )
                     res.status(404).json({
-                        message: `No Entrevistas where found at ${req}.`
+                        message: `No Entrevistas where found with: ${req.query.text}.`
+                    });
+                else{
+                    // if the text was found we now search for the cargo on the user_id from the entrevistas
+                    //res.json(data); 
+                    
+                }
+                    
+            })
+            .catch(err => {
+                res.status(500).json({
+                    message:
+                        err.message || "Some error occurred while retrieving the Entrevistas."
+                });
+            });
+    
+
+    }
+    //if its empthy it will search for everything and/or filter dor the role
+    else{
+
+        Entrevistas.findAll()
+            .then(data => {
+                if (data === null)
+                    res.status(404).json({
+                        message: `No Entrevistas where found: user does not have entrevistas .`
                     });
                 else{
                     
-                    User.findByPk(req.loggedUserId )
-                        .then(user => {
-                            // no data returned means there is no User in DB with that given ID 
-                            if (user === null)
-                                res.status(404).json({
-                                    message: `Not found User with id ${req.loggedUserId}.`
-                                });
-                            else {
-                                //checking the role of the user now acording ot the filter
-                                Role.find
-
-                            }
-                        })
-                    
-
+                    res.json(data); 
                 }
+                    
             })
             .catch(err => {
                 res.status(500).json({
@@ -79,70 +94,17 @@ exports.findEntrevistaFilterd = async(req,res) => {
                 });
             });
 
-   
-
-    try{
-        // first check the the entrevistas the looged user is a participate in
-
-        let loggedUser = await Entrevistas.findAll({
-            where: {
-                id_user : req.loggedUserId
-            },
-            include: {
-                model: user,
-                through: { attributes: [] } //remove data retrieved from join table
-            }
-        })
-
-        if(loggedUser === null){
-            res.status(404).json({
-                message: `No Entrevistas where found with ${req.loggedUserId}.`
-            })
-        }
-
-        // after that check of those entrevistas check if the user_id of the entrevista is acording to therole
-
-        
-
-        // after all that check the text if there are any keywords matching the the text_agenda
-        //checking if its emphty
-        if(req.params.searchText === null){
-            res.status(404).json({
-                message: `search text cant be empthy !!.`
-            })
-        }
-
-
-        // finally return the results
-
-
-        
-
-
-
-        
     }
-    catch{
+    
 
-        res.status(500).json({
-            message:
-                err.message || "Some error occurred while retrieving the Entrevistas."
-        });
-        
-    }
-
-
-
-
-        
-
-
-
-
-}*/
+}
 
 
 exports.createEntrevista = (req, res) => {
+    if (!req.body || !req.body.type) {
+        res.status(400).json({ message: "Os dados não podem estar vazios!" });
+        return;
+    }
 
     Entrevistas.create(req.body)
         .then(data => {

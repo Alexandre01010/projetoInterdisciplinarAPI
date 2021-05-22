@@ -13,7 +13,8 @@ router.use((req, res, next) => {
 })
 
 router.route('/')    
-    .get(entrevistasController.findAllEntrevista)
+    //.get(entrevistasController.findAllEntrevista) //for text purpaces
+    .get(entrevistasController.findEntrevistaFilterd)
     .post(entrevistasController.createEntrevista)
 router.route('/:idEntrevista')
     .put(entrevistasController.updateEntrevista)
