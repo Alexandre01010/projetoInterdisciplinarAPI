@@ -1,7 +1,7 @@
 const db = require("../models/db.js");
 const Entrevistas = db.entrevista;
 const User = db.user;
-const Role = db.role;
+
 
 const { Op, where } = require("sequelize");
 const { user, entrevista } = require("../models/db.js");
@@ -40,41 +40,99 @@ exports.findEntrevistaFilterd = (req,res) => {
     console.log("heres the text: "+ test_text)
     console.log("heres the cargo: " + cargo_req)
     //for the most part the search will have to be changed, if we are looking for keywords in the description, then that need to be used diferently
-
-    //If there is something on the search text
-    if(req.query.text){
-        Entrevistas.findAndCountAll({
-            where: {  
-                // we will be putting the loggeduser id you get from the token here has well          
-                texto_agenda: { [Op.like]:  req.query.text  },
-                
-            }
-        })
-        
-            .then(entrevista => {
-                if (entrevista === null||entrevista.count==0 )
+    
+    if(req.query.cargo){
+        User.findAll({where:{id_tipo_user: cargo_req}})
+            .then(userdata =>{
+                if (userdata === null){
                     res.status(404).json({
-                        message: `No Entrevistas where found with: ${req.query.text}.`
+                        message: `No Users with ${cargo_req} where found`
                     });
-                else{
-                    // if the text was found we now search for the cargo on the user_id from the entrevistas
-                    //res.json(data); 
-                    
                 }
                     
+                else{// if user with the cargo was found then we search
+
+                    if(req.query.text ){
+                        Entrevistas.findAndCountAll({
+                                where: {  
+                                    // we will be putting the loggeduser id you get from the token here has well          
+                                    texto_agenda: { [Op.like]:  req.query.text  },
+                                    id_user:{ [Op.like]:  userdata.id_user  }
+                                }
+                            })
+                                        
+                            .then(data => {
+                                if (data === null||data.count==0 ){
+                                    res.status(404).json({
+                                        message: `No Entrevistas where found with: ${req.query.text}.`
+                                    });
+                                }
+                                else{
+                                    // if the text was found we now search for the cargo on the user_id from the entrevistas
+                                    res.json(data); 
+                                    
+                                }
+                                    
+                            })
+                            .catch(err => {
+                                res.status(500).json({
+                                    message:
+                                        err.message || "Some error occurred while retrieving the Entrevistas."
+                                });
+                            });
+                        
+                
+                    }
+
+                    else{
+
+                        Entrevistas.findAll({
+                            where: {  
+                                // we will be putting the loggeduser id you get from the token here has well          
+                                
+                                id_user:{ [Op.like]:  userdata.id_user  }
+                            }
+                        })
+                            .then(data => {
+                                if (data === null)
+                                    res.status(404).json({
+                                        message: `No Entrevistas where found: user does not have entrevistas .`
+                                    });
+                                else{
+                                    
+                                    res.json(data); 
+                                }
+                                    
+                            })
+                            .catch(err => {
+                                res.status(500).json({
+                                    message:
+                                        err.message || "Some error occurred while retrieving the Entrevistas."
+                                });
+                            });
+
+                    }
+
+                    
+                }
             })
+            
             .catch(err => {
                 res.status(500).json({
                     message:
-                        err.message || "Some error occurred while retrieving the Entrevistas."
+                        err.message || "Some error occurred while retrieving the Users cargo."
                 });
             });
+    }
+
+
+
+
     
 
-    }
-    //if its empthy it will search for everything and/or filter dor the role
-    else{
-
+    else{// this will give the default search: all the entrevistas of that user
+        
+        console.log("default result entered")
         Entrevistas.findAll()
             .then(data => {
                 if (data === null)
@@ -93,6 +151,7 @@ exports.findEntrevistaFilterd = (req,res) => {
                         err.message || "Some error occurred while retrieving the Entrevistas."
                 });
             });
+
 
     }
     
