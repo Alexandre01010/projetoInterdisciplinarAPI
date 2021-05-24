@@ -18,10 +18,6 @@ module.exports = (sequelize, DataTypes) => {
         type: DataTypes.STRING,
         allowNull: false
       },
-      id_tipo_user:{
-        type: DataTypes.INTEGER,
-        allowNull: false
-      },
       cv:{
         type: DataTypes.TEXT,
         allowNull: false
