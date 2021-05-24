@@ -39,7 +39,7 @@ db.entrevista = require("./entrevistas.model.js")(sequelize, DataTypes);
 db.entrevista.belongsToMany(db.user ,{through: db.participante, foreignKey: 'id_agenda', otherKey: 'id_user'})
 db.user.belongsToMany(db.entrevista ,{through: db.participante, foreignKey: 'id_user', otherKey: 'id_agenda'})
 
-db.user.hasOne(db.typeUser)
+db.user.belongsTo(db.typeUser)
 db.typeUser.hasMany(db.user)
 
 

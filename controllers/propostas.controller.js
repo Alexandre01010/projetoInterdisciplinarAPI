@@ -107,7 +107,7 @@ exports.getOne = (req, res) => {
 };
 
 // exports.findFiltered = (req, res) => {
-//   Proposta.findAndCountAll({ where: { email: req.params.type, id_tipo_estado: req.params.state, titulo: req.params.searchText}})
+//   Proposta.findAll({ where: { email: req.params.type, id_tipo_estado: req.params.state, titulo: req.params.searchText}})
 //     .then(data => {
 //       const response = getPagingData(data, offset, limit);
 //       res.status(200).json(response);
