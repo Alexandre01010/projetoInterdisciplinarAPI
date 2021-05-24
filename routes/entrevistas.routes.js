@@ -13,7 +13,8 @@ router.use((req, res, next) => {
 })
 
 router.route('/')    
-    .get(entrevistasController.findAllEntrevista)
+    //.get(entrevistasController.findAllEntrevista) //for text purpaces
+    .get(entrevistasController.findEntrevistaFilterd)
     .post(entrevistasController.createEntrevista)
 router.route('/:idEntrevista')
     .put(entrevistasController.updateEntrevista)
@@ -26,7 +27,7 @@ router.route('/:idEntrevista/participantes/:idParticipante')
     .post(entrevistasController.addParticipante) 
     .delete(entrevistasController.deleteParticipante)
 /*    
-router.route('/entrevistas?idUser=:loggedUser&text=:searchText&cargo=:selectedCargo')
+router.route('/entrevistas?text=:searchText&cargo=:selectedCargo')
     .get(entrevistasController.findEntrevistaFilterd) */
 
 

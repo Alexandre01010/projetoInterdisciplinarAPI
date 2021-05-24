@@ -1,13 +1,14 @@
 const jwt = require("jsonwebtoken");
 const bcrypt = require("bcryptjs");
 const config = require("../config/auth.config.js");
-const db = require("../models");
+const db = require('../models/db.js')
 const User = db.user;
+const Role = db.typeUser
 exports.signup = async (req, res) => {
     try {
         // check duplicate username
         let user = await User.findOne(
-            { where: { username: req.body.username } }
+            { where: { nome: req.body.nome } }
         );
         if (user)
             return res.status(400).json({ message: "Failed! Username is already in use!" });
@@ -22,7 +23,7 @@ exports.signup = async (req, res) => {
 
         });
         if (req.body.role) {
-            let role = await Role.findOne({ where: { name: req.body.role } });
+            let role = await Role.findOne({ where: { tipo_user: req.body.role } });
             if (role)
                 await user.setRole(role);
         }
@@ -34,6 +35,7 @@ exports.signup = async (req, res) => {
         res.status(500).json({ message: err.message });
     };
 };
+
 
 exports.signin = async (req, res) => {
     try {

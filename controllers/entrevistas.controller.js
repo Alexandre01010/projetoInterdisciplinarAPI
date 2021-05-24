@@ -1,7 +1,7 @@
 const db = require("../models/db.js");
 const Entrevistas = db.entrevista;
 const User = db.user;
-const Role = db.role;
+
 
 const { Op, where } = require("sequelize");
 const { user, entrevista } = require("../models/db.js");
@@ -27,89 +27,143 @@ exports.findAllEntrevista = (req, res) => {
         });
 };
 
-/*
+
 exports.findEntrevistaFilterd = (req,res) => {
-    ///entrevistas?idUser=:loggedUser&text=:searchText&cargo=:selectedCargo
-    // idUser = :loggedUser -> user logged in with associated interviews 
+    ///entrevistas?text=:searchText&cargo=:selectedCargo
+    
     // text = :searchText -> text from the search bar
-    // cargo = :selectedCargo -> the type of the user incharge of the interview
+    // cargo = :selectedCargo -> the type of the user incharge of the interview , it has to be user types: 1 -docentes ,2 nao docentes ,3 alunos
 
-    // steps to do the filter -> 
-    //1 -search entrevista assosiated to the logged in user (check user id in the looged token info?)
-    //2 - check if the text is blank or not, it cannot blanked
-    //3 - check if the user inchage of the entrevista is the the type selected , canot be blacked
-    //4 - res.json(data)
+    // try getting the first part of the fitler , the textfield
+    const test_text = req.query.text;
+    const cargo_req = req.query.cargo //must comment line where getting just the title query parameter
+    console.log("heres the text: "+ test_text)
+    console.log("heres the cargo: " + cargo_req)
+    //for the most part the search will have to be changed, if we are looking for keywords in the description, then that need to be used diferently
+    
+    if(req.query.cargo){
+        User.findAll({where:{id_tipo_user: cargo_req}})
+            .then(userdata =>{
+                if (userdata === null){
+                    res.status(404).json({
+                        message: `No Users with ${cargo_req} where found`
+                    });
+                }
+                    
+                else{// if user with the cargo was found then we search
 
-
-    // get and verify if the user is loggedin and get its id
-
-    let token = req.headers["x-access-token"];
-
-    if (!token) {
-        return res.status(403).send({
-            message: "No token provided!"
-        });
-    }
-    // verify request token given the JWT secret key
-    jwt.verify(token, config.secret, (err, decoded) => {
-        if (err) {
-            return res.status(401).send({ message: "Unauthorized!" });
-        }
-        req.loggedUserId = decoded.id; // save user ID for future verifications
-        next();
-    });
-
-
-
-    // after validations get the entrevistas then start to filter through parts
-    Entrevistas.findAll()
-        .then(entrevista => {
-            if (entrevista === null)
-                res.status(404).json({
-                    message: `No Entrevistas where found at ${req}.`
-                });
-            else{
-                
-                User.findByPk(req.loggedUserId )
-                    .then(user => {
-                        // no data returned means there is no User in DB with that given ID 
-                        if (user === null)
-                            res.status(404).json({
-                                message: `Not found User with id ${req.loggedUserId}.`
+                    if(req.query.text ){
+                        Entrevistas.findAndCountAll({
+                                where: {  
+                                    // we will be putting the loggeduser id you get from the token here has well          
+                                    texto_agenda: { [Op.like]:  req.query.text  },
+                                    id_user:{ [Op.like]:  userdata.id_user  }
+                                }
+                            })
+                                        
+                            .then(data => {
+                                if (data === null||data.count==0 ){
+                                    res.status(404).json({
+                                        message: `No Entrevistas where found with: ${req.query.text}.`
+                                    });
+                                }
+                                else{
+                                    // if the text was found we now search for the cargo on the user_id from the entrevistas
+                                    res.json(data); 
+                                    
+                                }
+                                    
+                            })
+                            .catch(err => {
+                                res.status(500).json({
+                                    message:
+                                        err.message || "Some error occurred while retrieving the Entrevistas."
+                                });
                             });
-                        else {
-                            //checking the role of the user now acording ot the filter
-                            Role.find
-
-
-                            
-
-                            
-                            
-                            
-                            
-                        }
-                    })
+                        
                 
+                    }
 
-            }
-        })
-        .catch(err => {
-            res.status(500).json({
-                message:
-                    err.message || "Some error occurred while retrieving the Entrevistas."
+                    else{
+
+                        Entrevistas.findAll({
+                            where: {  
+                                // we will be putting the loggeduser id you get from the token here has well          
+                                
+                                id_user:{ [Op.like]:  userdata.id_user  }
+                            }
+                        })
+                            .then(data => {
+                                if (data === null)
+                                    res.status(404).json({
+                                        message: `No Entrevistas where found: user does not have entrevistas .`
+                                    });
+                                else{
+                                    
+                                    res.json(data); 
+                                }
+                                    
+                            })
+                            .catch(err => {
+                                res.status(500).json({
+                                    message:
+                                        err.message || "Some error occurred while retrieving the Entrevistas."
+                                });
+                            });
+
+                    }
+
+                    
+                }
+            })
+            
+            .catch(err => {
+                res.status(500).json({
+                    message:
+                        err.message || "Some error occurred while retrieving the Users cargo."
+                });
             });
-        });
+    }
 
+
+
+
+    
+
+    else{// this will give the default search: all the entrevistas of that user
         
+        console.log("default result entered")
+        Entrevistas.findAll()
+            .then(data => {
+                if (data === null)
+                    res.status(404).json({
+                        message: `No Entrevistas where found: user does not have entrevistas .`
+                    });
+                else{
+                    
+                    res.json(data); 
+                }
+                    
+            })
+            .catch(err => {
+                res.status(500).json({
+                    message:
+                        err.message || "Some error occurred while retrieving the Entrevistas."
+                });
+            });
 
 
-
+    }
+    
 
 }
-*/
+
 
 exports.createEntrevista = (req, res) => {
+    if (!req.body || !req.body.type) {
+        res.status(400).json({ message: "Os dados não podem estar vazios!" });
+        return;
+    }
 
     Entrevistas.create(req.body)
         .then(data => {
