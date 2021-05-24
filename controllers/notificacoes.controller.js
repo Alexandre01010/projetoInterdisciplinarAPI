@@ -55,8 +55,17 @@ exports.editNotification = (req, res) => {
 
 exports.findNotificationsFiltered = (req, res) => {
     if (req.query.userID || req.query.stateID) {
-        Notificacao.findAll({ where: { id_user: req.query.userID ,
-                              id_tipo_estado: req.query.stateID}})
+        const {
+            userID,
+            stateID,
+        } = req.query;
+        let condition = {
+            id_user: userID,
+            id_tipo_estado: stateID
+        }
+        Notificacao.findAll({
+            where: condition
+        })
             .then(data => {
                 res.status(200).json(data);
             })
@@ -80,3 +89,6 @@ exports.findNotificationsFiltered = (req, res) => {
             });
     }
 }
+
+
+

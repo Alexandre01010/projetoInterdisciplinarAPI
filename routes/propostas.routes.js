@@ -13,7 +13,7 @@ router.use((req, res, next) => {
 })
 
 router.route('/')
-//    .get(propostasController.findFiltered)
+    .get(propostasController.findPropostasFiltered)
     .post(propostasController.create)
 
 router.route('/:proposalID')
