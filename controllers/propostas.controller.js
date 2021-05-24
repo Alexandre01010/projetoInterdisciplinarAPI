@@ -4,20 +4,6 @@ const candidaturaVar = db.candidatura
 
 const { Op } = require("sequelize")
 
-exports.findAllProposal = (req, res) => {
-  Proposta.findAll(req.body)
-    .then(data => {
-      res.status(200).json(data);
-    })
-    .catch((err) => {
-      res.status(500).json({
-        message:
-          err.message || "Ocorreu um erro ao encontrar propostas",
-      });
-    });
-}
-
-
 exports.create = (req, res) => {
   // Save Tutorial in the database
   Proposta.create(req.body)
@@ -48,7 +34,7 @@ exports.create = (req, res) => {
 //           message: `A proposta com o id ${req.params.proposalID} foi apagada com sucesso!`
 //         });
 //       } else {
-        
+
 //         res.status(404).json({
 //           message: `Não foi encontrada nenhuma proposta com o id ${req.params.proposalID}.`
 //         });
@@ -69,22 +55,22 @@ exports.deleteProposal = (req, res) => {
           message: "Proposta " + req.params.proposalID + " não existe"
         })
       } else {
-        Proposta.destroy({ where: { id_proposta: req.params.proposalID} })
-        .then((data) => {
-          if (data == 1) {
-            res.status(200).json({
-              message: "Proposta " + req.params.proposalID + " foi eliminada com sucesso"
-            })
-          }
-        })
-        .catch((err) => {
-          if(err.name === "SequelizeForeignKeyConstraintError"){
-            res.status(500).json({
-              message: "Não foi possivel eliminar a proposta com id " + req.params.proposalID + " pois tem candidaturas associadas"
-            })
-          }
-          
-        })
+        Proposta.destroy({ where: { id_proposta: req.params.proposalID } })
+          .then((data) => {
+            if (data == 1) {
+              res.status(200).json({
+                message: "Proposta " + req.params.proposalID + " foi eliminada com sucesso"
+              })
+            }
+          })
+          .catch((err) => {
+            if (err.name === "SequelizeForeignKeyConstraintError") {
+              res.status(500).json({
+                message: "Não foi possivel eliminar a proposta com id " + req.params.proposalID + " pois tem candidaturas associadas"
+              })
+            }
+
+          })
       }
     })
 }
@@ -110,16 +96,40 @@ exports.getOne = (req, res) => {
     });
 };
 
-// exports.findFiltered = (req, res) => {
-//   Proposta.findAll({ where: { email: req.params.type, id_tipo_estado: req.params.state, titulo: req.params.searchText}})
-//     .then(data => {
-//       const response = getPagingData(data, offset, limit);
-//       res.status(200).json(response);
-//     })
-//     .catch(err => {
-//       res.status(500).json({
-//         message:
-//           err.message || "Some error occurred while retrieving proposals."
-//       });
-//     });
-// };
+exports.findPropostasFiltered = (req, res) => {
+  if (req.query.type || req.query.state || req.query.text) {
+    const {
+      type,
+      state,
+      text
+    } = req.query;
+    let condition = {
+      id_user: userID,
+      id_tipo_estado: stateID
+    }
+    Proposta.findAll({
+      where: condition
+    })
+      .then(data => {
+        res.status(200).json(data);
+      })
+      .catch(err => {
+        res.status(500).json({
+          message:
+            err.message || "Ocorreu um erro ao encontrar propostas"
+        });
+      });
+  }
+  else {
+    Proposta.findAll(req.body)
+      .then(data => {
+        res.status(200).json(data);
+      })
+      .catch((err) => {
+        res.status(500).json({
+          message:
+            err.message || "Ocorreu um erro ao encontrar propostas",
+        });
+      });
+  }
+}
