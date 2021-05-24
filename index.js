@@ -7,9 +7,9 @@ const host = process.env.HOST || '0.0.0.0'; // if not defined, localhost
 app.use(cors()); //enable ALL CORS requests (client requests from other domain)
 app.use(express.json()); //enable parsing JSON body data
 // root route -- /api/
-app.get('/', function (req, res) {
-    res.status(200).json({ message: 'home -- TSIW api' });
-});
+// app.get('/', function (req, res) {
+//     res.status(200).json({ message: 'home -- TSIW api' });
+// });
 // routing middleware for resource TUTORIALS
 
 

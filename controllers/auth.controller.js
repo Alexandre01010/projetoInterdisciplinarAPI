@@ -14,7 +14,7 @@ exports.signup = async (req, res) => {
             return res.status(400).json({ message: "Failed! Username is already in use!" });
         // save User to database
         user = await User.create({
-            nome: req.body.username,
+            nome: req.body.nome,
             email: req.body.email,
             password: bcrypt.hashSync(req.body.password, 8), // generates hash to password
             id_tipo_user: req.body.id_tipo_user,
@@ -22,13 +22,6 @@ exports.signup = async (req, res) => {
             foto: req.body.foto
 
         });
-        if (req.body.role) {
-            let role = await Role.findOne({ where: { tipo_user: req.body.role } });
-            if (role)
-                await user.setRole(role);
-        }
-        else
-            await user.setRole(1); // user role = 1 (regular use; not ADMIN)
         return res.json({ message: "User was registered successfully!" });
     }
     catch (err) {
@@ -37,27 +30,27 @@ exports.signup = async (req, res) => {
 };
 
 
-exports.signin = async (req, res) => {
-    try {
-        let user = await User.findOne({ where: { username: req.body.username } });
-        if (!user) return res.status(404).json({ message: "User Not found." });
-        // tests a string (password in body) against a hash (password in database)
-        const passwordIsValid = bcrypt.compareSync(
-            req.body.password, user.password
-        );
-        if (!passwordIsValid) {
-            return res.status(401).json({
-                accessToken: null, message: "Invalid Password!"
-            });
-        }
-        // sign the given payload (user ID) into a JWT payload – builds JWT token, using secret key
-        const token = jwt.sign({ id: user.id }, config.secret, {
-            expiresIn: 86400 // 24 hours
-        });
-        let role = await user.getRole();
-        return res.status(200).json({
-            id: user.id, username: user.username,
-            email: user.email, role: role.name.toUpperCase(), accessToken: token
-        });
-    } catch (err) { res.status(500).json({ message: err.message }); };
-};
+// exports.signin = async (req, res) => {
+//     try {
+//         let user = await User.findOne({ where: { username: req.body.username } });
+//         if (!user) return res.status(404).json({ message: "User Not found." });
+//         // tests a string (password in body) against a hash (password in database)
+//         const passwordIsValid = bcrypt.compareSync(
+//             req.body.password, user.password
+//         );
+//         if (!passwordIsValid) {
+//             return res.status(401).json({
+//                 accessToken: null, message: "Invalid Password!"
+//             });
+//         }
+//         // sign the given payload (user ID) into a JWT payload – builds JWT token, using secret key
+//         const token = jwt.sign({ id: user.id }, config.secret, {
+//             expiresIn: 86400 // 24 hours
+//         });
+//         let role = await user.getRole();
+//         return res.status(200).json({
+//             id: user.id, username: user.username,
+//             email: user.email, role: role.name.toUpperCase(), accessToken: token
+//         });
+//     } catch (err) { res.status(500).json({ message: err.message }); };
+// };
