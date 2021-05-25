@@ -41,6 +41,37 @@ exports.findEntrevistaFilterd = (req,res) => {
     console.log("heres the cargo: " + cargo_req)
     //for the most part the search will have to be changed, if we are looking for keywords in the description, then that need to be used diferently
     // for this you want to search the inter views and do a include users
+
+    
+    Entrevistas.findAndCountAll({
+        where: {texto_agenda: { [Op.like]:  req.query.text  },
+                }
+        },{include:{model: user , where:{id_tipo_user: req.query.cargo}}})
+        .then(data =>{
+            if (data === null||data.count==0 ){
+                res.status(404).json({
+                    message: `No Entrevistas where found with: ${req.query.text} and cargo: ${req.query.cargo}.`
+                });
+            }
+            else(
+                res.json(data)
+            )
+
+        })
+        .catch(err => {
+            res.status(500).json({
+                message:
+                    err.message || "Some error occurred while retrieving the Entrevistas."
+            });
+        });
+
+   
+    
+
+
+
+
+    /* scrap for reference
     if(req.query.cargo){
         User.findAll({where:{id_tipo_user: cargo_req}})
             .then(userdata =>{
@@ -155,8 +186,9 @@ exports.findEntrevistaFilterd = (req,res) => {
 
     }
     
-
+*/
 }
+
 
 
 exports.createEntrevista = (req, res) => {
