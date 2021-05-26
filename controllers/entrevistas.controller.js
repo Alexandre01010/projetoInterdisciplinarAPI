@@ -42,15 +42,79 @@ exports.findEntrevistaFilterd = (req,res) => {
     //for the most part the search will have to be changed, if we are looking for keywords in the description, then that need to be used diferently
     // for this you want to search the inter views and do a include users
 
-    
-    Entrevistas.findAndCountAll({
-        where: {texto_agenda: { [Op.like]:  req.query.text  },
-                }
-        },{include:{model: user , where:{id_tipo_user: req.query.cargo}}})
+    // apply both filters ( currently it isnt quite filtering, i tried putting in one find all count all but didnt work)
+    if(req.query.text && req.query.cargo){
+        Entrevistas.findAndCountAll({where:{texto_agenda: req.query.text}})
+        .then(data_text =>{
+            if (data_text === null||data_text.count==0 ){
+                res.status(404).json({
+                    message: `No Entrevistas where found with: ${req.query.text} .`
+                });
+            }
+            else{
+                
+                Entrevistas.findAll({include:{model: user , where:{id_tipo_user: req.query.cargo}}})
+                .then(data =>{
+                    if (data === null||data.count==0 ){
+                        res.status(404).json({
+                            message: `No Entrevistas where found with cargo: ${req.query.cargo}.`
+                        });
+                    }
+                    else(
+                        res.json(data)
+                    )
+        
+                })
+                .catch(err => {
+                    res.status(500).json({
+                        message:
+                            err.message || "Some error occurred while retrieving the Entrevistas."
+                    });
+                });
+
+            }
+
+        })
+        .catch(err => {
+            res.status(500).json({
+                message:
+                    err.message || "Some error occurred while retrieving the Entrevistas."
+            });
+        });
+
+    }
+
+
+    // get entrevistas with text
+    else if(req.query.text){
+        Entrevistas.findAndCountAll({where:{texto_agenda: req.query.text}})
         .then(data =>{
             if (data === null||data.count==0 ){
                 res.status(404).json({
-                    message: `No Entrevistas where found with: ${req.query.text} and cargo: ${req.query.cargo}.`
+                    message: `No Entrevistas where found with: ${req.query.text} .`
+                });
+            }
+            else(
+                res.json(data)
+            )
+
+        })
+        .catch(err => {
+            res.status(500).json({
+                message:
+                    err.message || "Some error occurred while retrieving the Entrevistas."
+            });
+        });
+    }   
+    
+
+    // Get entrevistas with cargo 
+    else if(req.query.cargo){
+        Entrevistas.findAndCountAll({include:{model: user , where:{id_tipo_user: req.query.cargo}}})
+        .then(data =>{
+            if (data === null||data.count==0 ){
+                res.status(404).json({
+                    message: `No Entrevistas where found with cargo: ${req.query.cargo}.`
                 });
             }
             else(
@@ -65,113 +129,16 @@ exports.findEntrevistaFilterd = (req,res) => {
             });
         });
 
-   
-    
-
-
-
-
-    /* scrap for reference
-    if(req.query.cargo){
-        User.findAll({where:{id_tipo_user: cargo_req}})
-            .then(userdata =>{
-                if (userdata === null){
-                    res.status(404).json({
-                        message: `No Users with ${cargo_req} where found`
-                    });
-                }
-                    
-                else{// if user with the cargo was found then we search
-
-                    if(req.query.text ){
-                        Entrevistas.findAndCountAll({
-                                where: {  
-                                    // we will be putting the loggeduser id you get from the token here has well          
-                                    texto_agenda: { [Op.like]:  req.query.text  },
-                                    id_user:{ [Op.like]:  userdata.id_user  }
-                                }
-                            })
-                                        
-                            .then(data => {
-                                if (data === null||data.count==0 ){
-                                    res.status(404).json({
-                                        message: `No Entrevistas where found with: ${req.query.text}.`
-                                    });
-                                }
-                                else{
-                                    // if the text was found we now search for the cargo on the user_id from the entrevistas
-                                    res.json(data); 
-                                    
-                                }
-                                    
-                            })
-                            .catch(err => {
-                                res.status(500).json({
-                                    message:
-                                        err.message || "Some error occurred while retrieving the Entrevistas."
-                                });
-                            });
-                        
-                
-                    }
-
-                    else{
-
-                        Entrevistas.findAll({
-                            where: {  
-                                // we will be putting the loggeduser id you get from the token here has well          
-                                
-                                id_user:{ [Op.like]:  userdata.id_user  }
-                            }
-                        })
-                            .then(data => {
-                                if (data === null)
-                                    res.status(404).json({
-                                        message: `No Entrevistas where found: user does not have entrevistas .`
-                                    });
-                                else{
-                                    
-                                    res.json(data); 
-                                }
-                                    
-                            })
-                            .catch(err => {
-                                res.status(500).json({
-                                    message:
-                                        err.message || "Some error occurred while retrieving the Entrevistas."
-                                });
-                            });
-
-                    }
-
-                    
-                }
-            })
-            
-            .catch(err => {
-                res.status(500).json({
-                    message:
-                        err.message || "Some error occurred while retrieving the Users cargo."
-                });
-            });
     }
-
-
-
-
-    
-
-    else{// this will give the default search: all the entrevistas of that user
-        
-        console.log("default result entered")
+    // if no filter is applied: default get
+    else {
         Entrevistas.findAll()
             .then(data => {
                 if (data === null)
                     res.status(404).json({
                         message: `No Entrevistas where found: user does not have entrevistas .`
                     });
-                else{
-                    
+                else{                    
                     res.json(data); 
                 }
                     
@@ -183,10 +150,9 @@ exports.findEntrevistaFilterd = (req,res) => {
                 });
             });
 
-
     }
+
     
-*/
 }
 
 
