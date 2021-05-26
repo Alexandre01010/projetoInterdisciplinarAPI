@@ -53,4 +53,4 @@ exports.signup = async (req, res) => {
 //             email: user.email, role: role.name.toUpperCase(), accessToken: token
 //         });
 //     } catch (err) { res.status(500).json({ message: err.message }); };
-// commit de teste };
+// };
