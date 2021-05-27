@@ -98,15 +98,26 @@ exports.getOne = (req, res) => {
 
 exports.findPropostasFiltered = (req, res) => {
   if (req.query.type || req.query.state || req.query.text) {
-    const {
-      type,
-      state,
-      text
-    } = req.query;
-    let condition = {
-      id_user: userID,
-      id_tipo_estado: stateID
-    }
+    const whitelist = ['type', 'state', 'text'];
+    let condition = {};
+    Object.keys(req.query).forEach(function (key) {
+        if (!whitelist.includes(key))
+            return; //inform user of BAD REQUEST           
+        if (key == "type"){
+          if (req.query[key] == "estagio"){
+            condition.email = { [Op.not]: null }
+          }else{
+            if (req.query[key] == "projeto"){
+              condition.email = { [Op.is]: null }
+            }
+          }          
+        }
+        if (key == "text")
+            condition.titulo = { [Op.like]: `%${req.query[key]}%` }
+        if (key == "state"){
+            condition.id_tipo_estado = parseInt(req.query[key])
+        }
+    });
     Proposta.findAll({
       where: condition
     })
