@@ -14,15 +14,19 @@ module.exports = (sequelize, DataTypes) => {
         type: DataTypes.STRING,
         allowNull: false
       },
-      password:{
+      password: {
         type: DataTypes.STRING,
         allowNull: false
       },
-      cv:{
+      id_tipo_user: {
+        type: DataTypes.INTEGER,
+        allowNull: false
+      },
+      cv: {
         type: DataTypes.TEXT,
         allowNull: false
       },
-      foto:{
+      foto: {
         type: DataTypes.STRING,
         allowNull: false
       }
