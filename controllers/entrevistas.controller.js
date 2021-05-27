@@ -44,33 +44,16 @@ exports.findEntrevistaFilterd = (req,res) => {
 
     // apply both filters ( currently it isnt quite filtering, i tried putting in one find all count all but didnt work)
     if(req.query.text && req.query.cargo){
-        Entrevistas.findAndCountAll({where:{texto_agenda: req.query.text}})
+        Entrevistas.findAndCountAll({where:{texto_agenda: req.query.text},include:{model: user , where:{id_tipo_user: req.query.cargo}}})
         .then(data_text =>{
             if (data_text === null||data_text.count==0 ){
                 res.status(404).json({
-                    message: `No Entrevistas where found with: ${req.query.text} .`
+                    message: `No Entrevistas where found with: ${req.query.text}.`
                 });
             }
             else{
-                
-                Entrevistas.findAll({include:{model: user , where:{id_tipo_user: req.query.cargo}}})
-                .then(data =>{
-                    if (data === null||data.count==0 ){
-                        res.status(404).json({
-                            message: `No Entrevistas where found with cargo: ${req.query.cargo}.`
-                        });
-                    }
-                    else(
-                        res.json(data)
-                    )
-        
-                })
-                .catch(err => {
-                    res.status(500).json({
-                        message:
-                            err.message || "Some error occurred while retrieving the Entrevistas."
-                    });
-                });
+                console.log(data_text)
+                res.json(data_text)
 
             }
 
