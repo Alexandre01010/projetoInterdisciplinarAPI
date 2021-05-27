@@ -9,10 +9,20 @@ exports.signup = async (req, res) => {
     try {
         // check duplicate username
         let user = await User.findOne(
-            { where: { nome: req.body.nome } || { email: req.body.email} }
+            { where: { nome: req.body.nome } }
         );
-        if (user)
-            return res.status(400).json({ message: "Failed! Username is already in use!" });
+
+        let userEmail = await User.findOne(
+            { where: { email: req.body.email } }
+        )
+        if (user || userEmail){
+            if(user){
+                return res.status(400).json({ message: "Failed! Username is already in use!" });
+            }
+            if(userEmail){
+                return res.status(400).json({ message: "Failed! Email is already in use!" });
+            }
+        }
         // save User to database
         user = await User.create({
             nome: req.body.nome,
