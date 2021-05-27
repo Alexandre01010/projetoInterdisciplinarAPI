@@ -29,20 +29,35 @@ exports.findAllEntrevista = (req, res) => {
 
 
 exports.findEntrevistaFilterd = (req,res) => {
-    ///entrevistas?text=:searchText&cargo=:selectedCargo
-    
-    // text = :searchText -> text from the search bar
-    // cargo = :selectedCargo -> the type of the user incharge of the interview , it has to be user types: 1 -docentes ,2 nao docentes ,3 alunos
+    ///entrevistas?text=:searchText&cargo=:selectedCargo    
 
-    // try getting the first part of the fitler , the textfield
+    // testing if its reciving the data correctly
     const test_text = req.query.text;
-    const cargo_req = req.query.cargo //must comment line where getting just the title query parameter
+    const cargo_req = req.query.cargo 
     console.log("heres the text: "+ test_text)
     console.log("heres the cargo: " + cargo_req)
-    //for the most part the search will have to be changed, if we are looking for keywords in the description, then that need to be used diferently
-    // for this you want to search the inter views and do a include users
 
+    /// lets try to make this code smaller, less else if conditions to make it more efficient, try to add this example:
+    /*
+    tutorials?title=vue&description=vue&id=3&something=else
+
+    const whitelist = ['title', 'description', 'id'];
+    let condition = {};
+    Object.keys(req.query).forEach(function (key) {
+        if (!whitelist.includes(key))
+            return; //inform user of BAD REQUEST
+            
+        if (key == "title")
+            condition.title = { [Op.like]: `%${req.query[key]}%` }
+        if (key == "description")
+            condition.description = { [Op.like]: `%${req.query[key]}%` }
+        if (key == "id")
+            condition.id = parseInt(req.query[key])
+    });
+    */
     // apply both filters ( currently it isnt quite filtering, i tried putting in one find all count all but didnt work)
+
+    
     if(req.query.text && req.query.cargo){
         Entrevistas.findAndCountAll({where:{texto_agenda: req.query.text},include:{model: user , where:{id_tipo_user: req.query.cargo}}})
         .then(data_text =>{
