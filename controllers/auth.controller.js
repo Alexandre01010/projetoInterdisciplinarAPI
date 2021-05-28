@@ -61,10 +61,10 @@ exports.signin = async (req,res) => {
         console.log("Bool: " + user)
         // console.log(req.body.password)
         // console.log("message: " + user.nome)
-        // const passwordIsValid = bcrypt.compare(
-        //     req.body.password, user.password
-        // )
         //console.log("Estado da comparação: " + passwordIsValid)
+        const passwordIsValid = bcrypt.compare(
+            req.body.password, user.password
+        )
         if(!user){
             return res.status(404).json({
                 message: "Utilizador não existe"
