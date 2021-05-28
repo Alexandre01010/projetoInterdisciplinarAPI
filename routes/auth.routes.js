@@ -7,8 +7,8 @@ router.use((req, res, next) => {
 })
 router.route('/signup')
     .post(authController.signup);
-// router.route('/signin')
-//     .post(authController.signin)
+router.route('/signin')
+     .post(authController.signin)
 router.all('*', function (req, res) {
     res.status(404).json({ message: 'AUTHENTICATION: what???' });
 })
