@@ -58,13 +58,13 @@ exports.signup = async (req, res) => {
 exports.signin = async (req,res) => {
     try{
         let user = await User.findOne({ where: { email: req.body.email } })
-        console.log(user.password)
+        console.log("Bool: " + user)
         // console.log(req.body.password)
-        console.log("message: " + user.nome)
-        const passwordIsValid = bcrypt.compareSync(
-            req.body.password, user.password
-        )
-        console.log("Estado da comparação: " + passwordIsValid)
+        // console.log("message: " + user.nome)
+        // const passwordIsValid = bcrypt.compare(
+        //     req.body.password, user.password
+        // )
+        //console.log("Estado da comparação: " + passwordIsValid)
         if(!user){
             return res.status(404).json({
                 message: "Utilizador não existe"
