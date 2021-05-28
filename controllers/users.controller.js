@@ -94,7 +94,8 @@ exports.deleteUser = (req, res) => {
 
 exports.findByType = (req, res) => {
   if (req.query.idTipoUser) {
-    User.findAll({ where: { id_tipo_user: req.query.idTipoUser } })
+    if (req.query.idTipoUser.match(/^(1|2|3)$/g)){
+      User.findAll({ where: { id_tipo_user: req.query.idTipoUser } })
       .then(data => {
         res.status(200).json(data);
       })
@@ -104,6 +105,11 @@ exports.findByType = (req, res) => {
             err.message || "Ocorreu um erro ao encontrar utilizadores"
         });
       });
+    }
+    else {
+      res.status(400).json({ message: 'O valor do id tipo de user varia apenas entre 1 e 3' });
+      return;
+    }
   }
   else{
     User.findAll(req.body)
