@@ -55,62 +55,53 @@ exports.signup = async (req, res) => {
 //       });
 //   }
 
-exports.signin = async (req,res) => {
-    try{
-        let user = await User.findOne({ where: { email: req.body.email } })
-        console.log("Bool: " + user)
-        // console.log(req.body.password)
-        // console.log("message: " + user.nome)
-        //console.log("Estado da comparação: " + passwordIsValid)
-        const passwordIsValid = bcrypt.compare(
-            req.body.password, user.password
-        )
-        if(!user){
-            return res.status(404).json({
-                message: "Utilizador não existe"
-            })
-        }else{
-            if(!passwordIsValid){
-                return res.status(401).json({
-                    accessToken: null, message: "Password inválida"
-                })
-            }
-            const token = jwt.sign({ id: user.id_user }, config.secret, {
-                expiresIn: 86400
-            })
-            return res.status(200).json({
-                id: user.id_user, name: user.nome,
-                email: user.email, role: user.id_tipo_user, accessToken: token
-            })
-        }
-    }catch(err){
-        res.status(500).json({
-            message: err.message
-        })
-    }
-}
-
 // exports.signin = async (req, res) => {
 //     try {
-//         let user = await User.findOne({ where: { username: req.body.username } });
-//         if (!user) return res.status(404).json({ message: "User Not found." });
-//         // tests a string (password in body) against a hash (password in database)
-//         const passwordIsValid = bcrypt.compareSync(
-//             req.body.password, user.password
-//         );
-//         if (!passwordIsValid) {
-//             return res.status(401).json({
-//                 accessToken: null, message: "Invalid Password!"
-//             });
+//         let user = await User.findOne({ where: { email: req.body.email } })
+//         if (!user) {
+//             return res.status(404).json({ message: "Utilizador não encontrado" })
 //         }
-//         // sign the given payload (user ID) into a JWT payload – builds JWT token, using secret key
-//         const token = jwt.sign({ id: user.id }, config.secret, {
-//             expiresIn: 86400 // 24 hours
-//         });
-//         let role = await user.getRole();
+//         const isPasswordValid = bcrypt.compareSync(
+//             req.body.password, user.password
+//         )
+//         if (!isPasswordValid) {
+//             return res.status(404).json({ message: "Password inválida" })
+//         }
+//         const token = jwt.sign({ id: user.id_user }, config.secret, {
+//             expiresIn: 86400
+//         })
 //         return res.status(200).json({
-//             id: user.id, username: user.username,
-//             email: user.email, role: role.name.toUpperCase(), accessToken: token
-//         });
-//     } catch (err) { res.status(500).json({ message: err.message }); };
-// };
+//             id: user.id_user, username: user.nome, email: user.email, accessToken: token
+//         })
+
+//     } catch (err) {
+//         res.status(500).json({ message: err.message })
+//     }
+// }
+
+exports.signin = async (req, res) => {
+    try {
+        let user = await User.findOne({ where: { email: req.body.email } });
+        if (!user) return res.status(404).json({ message: "User Not found." });
+        //console.log(bcrypt.hashSync(req.body.password))
+        console.log(user.password)
+        // tests a string (password in body) against a hash (password in database)
+        const passwordIsValid = bcrypt.compareSync(
+            req.body.password, user.password
+        );
+        console.log("dsfsdfsd " + passwordIsValid)
+        if (!passwordIsValid) {
+            return res.status(401).json({
+                accessToken: null, message: "Invalid Password!"
+            });
+        }
+        // sign the given payload (user ID) into a JWT payload – builds JWT token, using secret key
+        const token = jwt.sign({ id: user.id_user }, config.secret, {
+            expiresIn: 86400 // 24 hours
+        });
+        return res.status(200).json({
+            id: user.id_user, username: user.nome,
+            email: user.email, accessToken: token
+        });
+    } catch (err) { res.status(500).json({ message: err.message }); };
+};
