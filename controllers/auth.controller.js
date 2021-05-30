@@ -3,7 +3,6 @@ const bcrypt = require("bcryptjs");
 const config = require("../config/auth.config.js");
 const db = require('../models/db.js')
 const User = db.user;
-const Role = db.typeUser
 
 exports.signup = async (req, res) => {
     try {
@@ -85,6 +84,8 @@ exports.signin = async (req, res) => {
         if (!user) return res.status(404).json({ message: "User Not found." });
         //console.log(bcrypt.hashSync(req.body.password))
         console.log(user.password)
+        //console.log(bcrypt.hashSync(req.body.password, 8))
+        
         // tests a string (password in body) against a hash (password in database)
         const passwordIsValid = bcrypt.compareSync(
             req.body.password, user.password
