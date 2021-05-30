@@ -26,7 +26,7 @@ exports.signup = async (req, res) => {
         user = await User.create({
             nome: req.body.nome,
             email: req.body.email,
-            password: req.body.password, // generates hash to password
+            password:  bcrypt.hashSync(req.body.password, 8), // generates hash to password
             id_tipo_user: req.body.id_tipo_user,
             cv: req.body.cv,
             foto: req.body.foto
@@ -87,16 +87,13 @@ exports.signin = async (req, res) => {
         //console.log(bcrypt.hashSync(req.body.password, 8))
         
         // tests a string (password in body) against a hash (password in database)
-        // const passwordIsValid = bcrypt.compareSync(
-        //     req.body.password, user.password
-        // );
-        // if (!passwordIsValid) {
-        //     return res.status(401).json({
-        //         accessToken: null, message: "Invalid Password!"
-        //     });
-        // }
-        if(user.password != req.body.password){
-            return res.status(404).json({ message: "Password inválida" })
+        const passwordIsValid = bcrypt.compareSync(
+            req.body.password, user.password
+        );
+        if (!passwordIsValid) {
+            return res.status(401).json({
+                accessToken: null, message: "Invalid Password!"
+            });
         }
         // sign the given payload (user ID) into a JWT payload – builds JWT token, using secret key
         const token = jwt.sign({ id: user.id_user }, config.secret, {
