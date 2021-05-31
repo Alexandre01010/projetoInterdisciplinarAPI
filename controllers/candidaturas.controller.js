@@ -52,7 +52,7 @@ exports.createCandidatura = (req, res) => {
                     res.status(400).json({ message: err.errors[0].message })
                   } else {
                     if (err.errors[0].message === "PRIMARY must be unique") {
-                      res.status(500).json({ message: "Já existe uma candidatura para o user " + req.body.id_user + " na proposta " + req.params.proposalID })
+                      res.status(400).json({ message: "Já existe uma candidatura para o user " + req.body.id_user + " na proposta " + req.params.proposalID })
                     } else {
                       res.status(500).json({
                         message: err || "Ocorreu um erro ao criar uma candidatura à proposta " + req.params.proposalID
