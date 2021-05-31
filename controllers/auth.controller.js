@@ -85,7 +85,7 @@ exports.signin = async (req, res) => {
         //console.log(bcrypt.hashSync(req.body.password))
         console.log(user.password)
         console.log(req.body.password)
-        //console.log(bcrypt.hashSync(req.body.password, 8))
+        //console.log(bcrypt.compareSync(req.body.password, user.password))
         
         // tests a string (password in body) against a hash (password in database)
         const passwordIsValid = bcrypt.compareSync(
