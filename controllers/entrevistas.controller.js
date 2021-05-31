@@ -57,17 +57,36 @@ exports.findEntrevistaFilterd = (req,res) => {
     */
     // apply both filters ( currently it isnt quite filtering, i tried putting in one find all count all but didnt work)
 
+
+    const whitelist = ['text', 'cargo', 'id']; // we will set the id aside for later on the userlogged in
+    let condition1 = {}
+    let condition2 = {}
     
-    if(req.query.text && req.query.cargo){
-        Entrevistas.findAndCountAll({where:{texto_agenda: req.query.text},include:{model: user , where:{id_tipo_user: req.query.cargo}}})
+    Object.keys(req.query).forEach(function (key) {
+        if (!whitelist.includes(key))
+            return; //inform user of BAD REQUEST
+            
+        if (key == "text")
+            condition1.texto_agenda = { [Op.like]: `%${req.query[key]}%` }
+        if (key == "cargo")
+            condition2.id_tipo_user = { [Op.like]: `%${req.query[key]}%` }
+        
+    });
+    
+
+
+
+    // after the condition is built, apply said filter
+    // {where:{texto_agenda: req.query.text},include:{model: user , where:{id_tipo_user: req.query.cargo}}}
+    Entrevistas.findAndCountAll({where:condition1,include:{model: user ,where:condition2}})
         .then(data_text =>{
             if (data_text === null||data_text.count==0 ){
                 res.status(404).json({
-                    message: `No Entrevistas where found with: ${req.query.text}.`
+                    message: `No Entrevistas where found with the current condition: ${req.query.text} , ${req.query.cargo} .`
                 });
             }
             else{
-                console.log(data_text)
+                console.log(data_text) // testing purpases
                 res.json(data_text)
 
             }
@@ -80,75 +99,12 @@ exports.findEntrevistaFilterd = (req,res) => {
             });
         });
 
-    }
 
 
-    // get entrevistas with text
-    else if(req.query.text){
-        Entrevistas.findAndCountAll({where:{texto_agenda: req.query.text}})
-        .then(data =>{
-            if (data === null||data.count==0 ){
-                res.status(404).json({
-                    message: `No Entrevistas where found with: ${req.query.text} .`
-                });
-            }
-            else(
-                res.json(data)
-            )
 
-        })
-        .catch(err => {
-            res.status(500).json({
-                message:
-                    err.message || "Some error occurred while retrieving the Entrevistas."
-            });
-        });
-    }   
+
+
     
-
-    // Get entrevistas with cargo 
-    else if(req.query.cargo){
-        Entrevistas.findAndCountAll({include:{model: user , where:{id_tipo_user: req.query.cargo}}})
-        .then(data =>{
-            if (data === null||data.count==0 ){
-                res.status(404).json({
-                    message: `No Entrevistas where found with cargo: ${req.query.cargo}.`
-                });
-            }
-            else(
-                res.json(data)
-            )
-
-        })
-        .catch(err => {
-            res.status(500).json({
-                message:
-                    err.message || "Some error occurred while retrieving the Entrevistas."
-            });
-        });
-
-    }
-    // if no filter is applied: default get
-    else {
-        Entrevistas.findAll()
-            .then(data => {
-                if (data === null)
-                    res.status(404).json({
-                        message: `No Entrevistas where found: user does not have entrevistas .`
-                    });
-                else{                    
-                    res.json(data); 
-                }
-                    
-            })
-            .catch(err => {
-                res.status(500).json({
-                    message:
-                        err.message || "Some error occurred while retrieving the Entrevistas."
-                });
-            });
-
-    }
 
     
 }
