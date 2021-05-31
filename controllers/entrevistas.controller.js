@@ -33,31 +33,12 @@ exports.findEntrevistaFilterd = (req,res) => {
 
     // testing if its reciving the data correctly
     const test_text = req.query.text;
-    const cargo_req = req.query.cargo 
+    const cargo_req = req.query.cargo;
+    //const logged_userID = 
     console.log("heres the text: "+ test_text)
     console.log("heres the cargo: " + cargo_req)
 
-    /// lets try to make this code smaller, less else if conditions to make it more efficient, try to add this example:
-    /*
-    tutorials?title=vue&description=vue&id=3&something=else
-
-    const whitelist = ['title', 'description', 'id'];
-    let condition = {};
-    Object.keys(req.query).forEach(function (key) {
-        if (!whitelist.includes(key))
-            return; //inform user of BAD REQUEST
-            
-        if (key == "title")
-            condition.title = { [Op.like]: `%${req.query[key]}%` }
-        if (key == "description")
-            condition.description = { [Op.like]: `%${req.query[key]}%` }
-        if (key == "id")
-            condition.id = parseInt(req.query[key])
-    });
-    */
-    // apply both filters ( currently it isnt quite filtering, i tried putting in one find all count all but didnt work)
-
-
+    
     const whitelist = ['text', 'cargo', 'id']; // we will set the id aside for later on the userlogged in
     let condition1 = {}
     let condition2 = {}
@@ -72,6 +53,9 @@ exports.findEntrevistaFilterd = (req,res) => {
             condition2.id_tipo_user = { [Op.like]: `%${req.query[key]}%` }
         
     });
+
+    //notes on how to apply the last filter, the logged user
+    // check the logged useds creations and participations
     
 
 
@@ -98,6 +82,8 @@ exports.findEntrevistaFilterd = (req,res) => {
                     err.message || "Some error occurred while retrieving the Entrevistas."
             });
         });
+
+        
 
 
 
