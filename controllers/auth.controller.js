@@ -84,12 +84,14 @@ exports.signin = async (req, res) => {
         if (!user) return res.status(404).json({ message: "Utilizador não encontrado" });
         //console.log(bcrypt.hashSync(req.body.password))
         console.log(user.password)
+        console.log(req.body.password)
         //console.log(bcrypt.hashSync(req.body.password, 8))
         
         // tests a string (password in body) against a hash (password in database)
         const passwordIsValid = bcrypt.compareSync(
             req.body.password, user.password
         );
+        console.log(passwordIsValid)
         if (!passwordIsValid) {
             return res.status(401).json({
                 accessToken: null, message: "Invalid Password!"

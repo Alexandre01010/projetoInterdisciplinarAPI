@@ -4,7 +4,8 @@ module.exports = (sequelize, DataTypes) => {
     id_proposta: {
       type: DataTypes.INTEGER,
       primaryKey: true,
-      allowNull: false
+      allowNull: false,
+      autoIncrement: true
     },
     titulo: {
       type: DataTypes.STRING,
