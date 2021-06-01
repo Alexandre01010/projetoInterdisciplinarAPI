@@ -2,6 +2,8 @@ const express = require('express');
 
 const candidaturaController = require("../controllers/candidaturas.controller");
 
+const authController = require("../controllers/auth.controller")
+
 
 let router = express.Router({ mergeParams: true });
 
@@ -24,12 +26,15 @@ router.route('/')
 router.route('/associadas')
     .get(candidaturaController.getByProposal)
 
-
+    // router.route('/:userID')
+    // .get(authController.verifyToken, authController.isAdminOrLoggedUser, userController.getUser);
 
 router.route('/:userID')
     .get(candidaturaController.getOneCandidatura)
     .put(candidaturaController.updateCandidatura)
-    .delete(candidaturaController.deleteCandidatura)
+    .delete(authController.verifyToken, authController.isAdminOrLoggedUser,  candidaturaController.deleteCandidatura)
+
+   
 
 
 // //send a predefined error message for invalid routes on TUTORIALS
