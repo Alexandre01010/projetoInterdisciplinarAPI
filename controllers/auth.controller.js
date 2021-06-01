@@ -127,7 +127,7 @@ exports.verifyToken = (req, res, next) => {
     })
 }
 
-exports.isAdmin = async (req, res) => {
+exports.isAdmin = async (req, res, next) => {
     let user = User.findByPk(req.loggedUserId)
     let role = user.id_tipo_user
 
@@ -139,7 +139,7 @@ exports.isAdmin = async (req, res) => {
     })
 }
 
-exports.isAdminOrLoggedUser = async (req, res) => {
+exports.isAdminOrLoggedUser = async (req, res, next) => {
     let user = User.findByPk(req.loggedUserId)
     let role = user.id_tipo_user
     if(role === 1){
@@ -150,7 +150,7 @@ exports.isAdminOrLoggedUser = async (req, res) => {
     })
 }
 
-exports.isDocente = async (req, res) => {
+exports.isDocente = async (req, res, next) => {
     let user = User.findByPk(req.loggedUserId)
     let role = user.id_tipo_user
     if(role === 2){
@@ -160,9 +160,11 @@ exports.isDocente = async (req, res) => {
         message: "Unauthorized"
     })
 }
-exports.isStudent = async (req, res) => {
-    let user = User.findByPk(req.loggedUserId)
-    let role = user.id_tipo_user
+exports.isStudent = async (req, res, next) => {
+    let user = await User.findByPk(req.loggedUserId)
+    let role = await user.id_tipo_user
+    console.log(user)
+    console.log(role)
     if(role === 3){
         next()
     }
@@ -171,7 +173,7 @@ exports.isStudent = async (req, res) => {
     })
 }
 
-exports.isExternalEntity = async (req, res) => {
+exports.isExternalEntity = async (req, res, next) => {
     let user = User.findByPk(req.loggedUserId)
     let role = user.id_tipo_user
     if(role === 4){
