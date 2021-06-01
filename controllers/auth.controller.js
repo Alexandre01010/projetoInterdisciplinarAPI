@@ -150,10 +150,21 @@ exports.isAdminOrLoggedUser = async (req, res) => {
     })
 }
 
+exports.isDocente = async (req, res) => {
+    let user = User.findByPk(req.loggedUserId)
+    let role = user.id_tipo_user
+    if(role === 2){
+        next()
+    }
+    res.status(403).send({
+        message: "Unauthorized"
+    })
+}
+
 exports.isExternalEntity = async (req, res) => {
     let user = User.findByPk(req.loggedUserId)
     let role = user.id_tipo_user
-    if(role === 3){
+    if(role === 4){
         next()
     }
     return res.status(403).send({
