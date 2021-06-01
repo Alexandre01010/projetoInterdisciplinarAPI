@@ -107,3 +107,34 @@ exports.signin = async (req, res) => {
         });
     } catch (err) { res.status(500).json({ message: err.message }); };
 };
+
+exports.verifyToken = (req, res, next) => {
+    let token = req.headers["x-access-token"]
+    if(!token){
+        return res.status(403).json({
+            message: "No token provided"
+        })
+    }
+
+    jwt.verify(token, config.secret, (err, decoded) => {
+        if(err){
+            return res.status(401).json({
+                message: "Unauthorized"
+            })
+        }
+        req.loggedUserId = decoded.id
+        next()
+    })
+}
+
+exports.isAdmin = async (req, res) => {
+    let user = User.findByPk(req.loggedUserId)
+    let role = user.id_tipo_user
+
+    if(role == 1){
+        next()
+    }
+    return res.status(403).send({
+        message: "Require Admin role"
+    })
+}
