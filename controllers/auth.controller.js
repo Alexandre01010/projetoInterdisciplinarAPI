@@ -149,3 +149,14 @@ exports.isAdminOrLoggedUser = async (req, res) => {
         message: "Require Admin role"
     })
 }
+
+exports.isExternalEntity = async (req, res) => {
+    let user = User.findByPk(req.loggedUserId)
+    let role = user.id_tipo_user
+    if(role === 3){
+        next()
+    }
+    return res.status(403).send({
+        message: "Unauthorized"
+    })
+}
