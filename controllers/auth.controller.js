@@ -142,7 +142,7 @@ exports.isAdmin = async (req, res) => {
 exports.isAdminOrLoggedUser = async (req, res) => {
     let user = User.findByPk(req.loggedUserId)
     let role = user.id_tipo_user
-    if(role === 1 || user.id_user == req.params.userID){
+    if(role === 1){
         next()
     }
     return res.status(403).send({
@@ -154,6 +154,16 @@ exports.isDocente = async (req, res) => {
     let user = User.findByPk(req.loggedUserId)
     let role = user.id_tipo_user
     if(role === 2){
+        next()
+    }
+    res.status(403).send({
+        message: "Unauthorized"
+    })
+}
+exports.isStudent = async (req, res) => {
+    let user = User.findByPk(req.loggedUserId)
+    let role = user.id_tipo_user
+    if(role === 3){
         next()
     }
     res.status(403).send({
