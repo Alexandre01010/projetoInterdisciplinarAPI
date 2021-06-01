@@ -138,3 +138,14 @@ exports.isAdmin = async (req, res) => {
         message: "Require Admin role"
     })
 }
+
+exports.isAdminOrLoggedUser = async (req, res) => {
+    let user = User.findByPk(req.loggedUserId)
+    let role = user.id_tipo_user
+    if(role === 1 || user.id == req.params.userID){
+        next()
+    }
+    return res.status(403).send({
+        message: "Require Admin role"
+    })
+}
