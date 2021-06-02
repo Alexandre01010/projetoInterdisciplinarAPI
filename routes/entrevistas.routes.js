@@ -12,10 +12,11 @@ router.use((req, res, next) => {
     next()
 })
 
-router.route('/')    
-    //.get(entrevistasController.findAllEntrevista) //for text purpaces
+//-----Routes setup 
+router.route('/')        
     .get(entrevistasController.findEntrevistaFilterd)
     .post(entrevistasController.createEntrevista)
+
 router.route('/:idEntrevista')
     .put(entrevistasController.updateEntrevista)
 
