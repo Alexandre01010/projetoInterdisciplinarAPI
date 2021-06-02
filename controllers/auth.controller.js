@@ -107,3 +107,77 @@ exports.signin = async (req, res) => {
         });
     } catch (err) { res.status(500).json({ message: err.message }); };
 };
+
+exports.verifyToken = (req, res, next) => {
+    let token = req.headers["x-access-token"]
+    if(!token){
+        return res.status(403).json({
+            message: "No token provided"
+        })
+    }
+
+    jwt.verify(token, config.secret, (err, decoded) => {
+        if(err){
+            return res.status(401).json({
+                message: "Unauthorized"
+            })
+        }
+        req.loggedUserId = decoded.id
+        next()
+    })
+}
+
+exports.isAdmin = async (req, res, next) => {
+    let user = User.findByPk(req.loggedUserId)
+    let role = user.id_tipo_user
+
+    if(role == 1){
+        next()
+    }
+    return res.status(403).send({
+        message: "Require Admin role"
+    })
+}
+
+exports.isAdminOrLoggedUser = async (req, res, next) => {
+    let user = User.findByPk(req.loggedUserId)
+    let role = user.id_tipo_user
+    if(role === 1){
+        next()
+    }
+    return res.status(403).send({
+        message: "Require Admin role"
+    })
+}
+
+exports.isDocente = async (req, res, next) => {
+    let user = User.findByPk(req.loggedUserId)
+    let role = user.id_tipo_user
+    if(role === 2){
+        next()
+    }
+    res.status(403).send({
+        message: "Unauthorized"
+    })
+}
+exports.isStudent = async (req, res, next) => {
+    let user = await User.findByPk(req.loggedUserId)
+    let role = await user.id_tipo_user
+    if(role === 3){
+        return next()
+    }
+    return res.status(403).send({
+        message: "Unauthorized"
+    })
+}
+
+exports.isExternalEntity = async (req, res, next) => {
+    let user = User.findByPk(req.loggedUserId)
+    let role = user.id_tipo_user
+    if(role === 4){
+        next()
+    }
+    return res.status(403).send({
+        message: "Unauthorized"
+    })
+}
