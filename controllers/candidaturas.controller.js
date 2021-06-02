@@ -1,5 +1,6 @@
 const { candidatura } = require("../models/db.js");
 const db = require("../models/db.js");
+const authControll = require('../controllers/auth.controller')
 const Candidaturas = db.candidatura;
 const Proposta = db.proposta;
 const User = db.user;
