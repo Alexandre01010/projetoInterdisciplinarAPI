@@ -1,4 +1,6 @@
 const { candidatura } = require("../models/db.js");
+const jwt = require("jsonwebtoken");
+const config = require("../config/auth.config.js");
 const db = require("../models/db.js");
 const authControll = require('../controllers/auth.controller')
 const Candidaturas = db.candidatura;
@@ -8,11 +10,11 @@ const User = db.user;
 exports.getCandidaturas = (req, res) => {
   Candidaturas.findAll(req.body)
     .then(data => {
-      if(data.length == 0){
+      if (data.length == 0) {
         res.status(404).json({
           message: "Não existe ainda candidaturas efetudas"
         })
-      }else{
+      } else {
         res.status(200).json(data)
       }
     })
@@ -25,6 +27,11 @@ exports.getCandidaturas = (req, res) => {
 }
 
 exports.createCandidatura = (req, res) => {
+  let token = req.headers["x-access-token"]
+  jwt.verify(token, config.secret, (err, decoded) => {
+    req.loggedUserId = decoded.id
+  });
+  console.log(req.loggedUserId)
   Proposta.findByPk(req.params.proposalID)
     .then(prop => {
       if (prop === null) {
@@ -32,7 +39,7 @@ exports.createCandidatura = (req, res) => {
           message: "Não foi encontrado uma porposta com id " + req.params.proposalID + "."
         })
       } else {
-        User.findByPk(req.body.id_user)
+        User.findByPk(req.loggedUserId)
           .then(user => {
             if (user === null) {
               res.status(404).json({
@@ -40,7 +47,7 @@ exports.createCandidatura = (req, res) => {
               })
             } else {
               Candidaturas.create({
-                id_user: req.body.id_user, id_proposta: req.params.proposalID, mensagem: req.body.mensagem,
+                id_user: req.loggedUserId, id_proposta: req.params.proposalID, mensagem: req.body.mensagem,
                 id_tipo_estado: req.body.id_tipo_estado, n_ordem_escolha: req.body.n_ordem_escolha
               })
                 .then((data) => {

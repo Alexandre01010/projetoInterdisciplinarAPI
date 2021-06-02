@@ -163,8 +163,6 @@ exports.isDocente = async (req, res, next) => {
 exports.isStudent = async (req, res, next) => {
     let user = await User.findByPk(req.loggedUserId)
     let role = await user.id_tipo_user
-    console.log(user)
-    console.log(role)
     if(role === 3){
         return next()
     }
