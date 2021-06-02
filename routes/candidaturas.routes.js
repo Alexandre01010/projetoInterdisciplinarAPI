@@ -9,7 +9,11 @@ let router = express.Router({ mergeParams: true });
 
 
 router.use((req, res, next) => {
-    res.header("Access-Control-Allow-Headers", "x-access-token, Origin, Content-Type, Accept");
+    const start = Date.now();
+    res.on("finish", () => { //finish event is emitted once the response is sent to the client
+        const diffSeconds = (Date.now() - start) / 1000; //figure out how many seconds elapsed
+        console.log(`${req.method} ${req.originalUrl} completed in ${diffSeconds} seconds`);
+    });
     next()
 })
 
@@ -22,15 +26,15 @@ router.route('/')
 router.route('/associadas')
     .get(candidaturaController.getByProposal)
 
-// router.route('/:userID')
-// .get(authController.verifyToken, authController.isAdminOrLoggedUser, userController.getUser);
+    // router.route('/:userID')
+    // .get(authController.verifyToken, authController.isAdminOrLoggedUser, userController.getUser);
 
 router.route('/:userID')
     .get(candidaturaController.getOneCandidatura)
     .put(candidaturaController.updateCandidatura)
-    .delete(authController.verifyToken, authController.isAdminOrLoggedUser, candidaturaController.deleteCandidatura)
+    .delete(authController.verifyToken, authController.isAdminOrLoggedUser,  candidaturaController.deleteCandidatura)
 
-
+   
 
 
 // //send a predefined error message for invalid routes on TUTORIALS

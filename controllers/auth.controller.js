@@ -166,9 +166,9 @@ exports.isStudent = async (req, res, next) => {
     console.log(user)
     console.log(role)
     if(role === 3){
-        next()
+        return next()
     }
-    res.status(403).send({
+    return res.status(403).send({
         message: "Unauthorized"
     })
 }
