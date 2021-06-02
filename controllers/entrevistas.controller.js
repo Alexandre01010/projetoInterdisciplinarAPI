@@ -56,8 +56,9 @@ exports.findEntrevistaFilterd = (req,res) => {
 
     //notes on how to apply the last filter, the logged user
     // check the logged useds creations and participations
-    
-
+    // find the find all uses with that change, fill the condtions
+    //for logged , entrevista.userid = loggedused || entrevista.participage = loggeduser
+ 
 
 
     // after the condition is built, apply said filter
