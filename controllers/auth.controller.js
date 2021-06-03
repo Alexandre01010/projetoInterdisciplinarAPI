@@ -82,22 +82,14 @@ exports.signin = async (req, res) => {
     try {
         let user = await User.findOne({ where: { email: req.body.email } });
         if (!user) return res.status(404).json({ message: "Utilizador não encontrado" });
-        //console.log(bcrypt.hashSync(req.body.password))
-        console.log(user.password)
-        console.log(req.body.password)
-        //console.log(bcrypt.compareSync(req.body.password, user.password))
-        
-        // tests a string (password in body) against a hash (password in database)
         const passwordIsValid = bcrypt.compareSync(
             req.body.password, user.password
         );
-        console.log(passwordIsValid)
         if (!passwordIsValid) {
             return res.status(401).json({
                 accessToken: null, message: "Invalid Password!"
             });
         }
-        // sign the given payload (user ID) into a JWT payload – builds JWT token, using secret key
         const token = jwt.sign({ id: user.id_user }, config.secret, {
             expiresIn: 86400 // 24 hours
         });
