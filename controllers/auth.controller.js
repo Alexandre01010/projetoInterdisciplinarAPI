@@ -132,7 +132,7 @@ exports.isAdmin = async (req, res, next) => {
     let role = user.id_tipo_user
 
     if(role == 1){
-        next()
+        return next()
     }
     return res.status(403).send({
         message: "Require Admin role"
@@ -143,7 +143,7 @@ exports.isAdminOrLoggedUser = async (req, res, next) => {
     let user = User.findByPk(req.loggedUserId)
     let role = user.id_tipo_user
     if(role === 1){
-        next()
+        return next()
     }
     return res.status(403).send({
         message: "Require Admin role"
@@ -153,8 +153,8 @@ exports.isAdminOrLoggedUser = async (req, res, next) => {
 exports.isDocente = async (req, res, next) => {
     let user = User.findByPk(req.loggedUserId)
     let role = user.id_tipo_user
-    if(role === 2){
-        next()
+    if(role === 2 || role === 1){
+        return next()
     }
     res.status(403).send({
         message: "Unauthorized"
@@ -163,7 +163,7 @@ exports.isDocente = async (req, res, next) => {
 exports.isStudent = async (req, res, next) => {
     let user = await User.findByPk(req.loggedUserId)
     let role = await user.id_tipo_user
-    if(role === 3){
+    if(role === 3 || role === 1){
         return next()
     }
     return res.status(403).send({
@@ -174,8 +174,8 @@ exports.isStudent = async (req, res, next) => {
 exports.isExternalEntity = async (req, res, next) => {
     let user = User.findByPk(req.loggedUserId)
     let role = user.id_tipo_user
-    if(role === 4){
-        next()
+    if(role === 4 || role === 1){
+        return next()
     }
     return res.status(403).send({
         message: "Unauthorized"
