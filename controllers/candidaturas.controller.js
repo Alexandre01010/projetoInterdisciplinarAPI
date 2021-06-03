@@ -31,7 +31,6 @@ exports.createCandidatura = (req, res) => {
   jwt.verify(token, config.secret, (err, decoded) => {
     req.loggedUserId = decoded.id
   });
-  console.log(req.loggedUserId)
   Proposta.findByPk(req.params.proposalID)
     .then(prop => {
       if (prop === null) {

@@ -1,12 +1,27 @@
 const db = require("../models/db.js");
+const jwt = require("jsonwebtoken");
+const config = require("../config/auth.config.js");
 const Proposta = db.proposta;
 const candidaturaVar = db.candidatura
 
 const { Op } = require("sequelize")
 
 exports.create = (req, res) => {
+  let token = req.headers["x-access-token"]
+  jwt.verify(token, config.secret, (err, decoded) => {
+    req.loggedUserId = decoded.id
+  });
   // Save Tutorial in the database
-  Proposta.create(req.body)
+  Proposta.create({ titulo: req.body.titulo, objetivos: req.body.objetivos, resultados_esperados: req.body.resultados_esperados,
+    outros_dados: req.body.outros_dados, plano_provisorio_trabalho: req.body.plano_provisorio_trabalho, 
+    perfil_candidato_desejado: req.body.perfil_candidato_desejado,
+    nome_tutor: req.body.nome_tutor, cargo_tutor: req.body.cargo_tutor, contato: req.body.contato, 
+    recursos_necessarios: req.body.recursos_necessarios,
+    id_prof_orientador: req.body.id_prof_orientador, id_user_autor: req.loggedUserId, id_tipo_estado: 1, 
+    nome_entidade: req.body.nome_entidade, 
+    morada_entidade: req.body.morada_entidade,
+    codigo_postal: req.body.codigo_postal, email: req.body.email, msgRevisao: req.body.msgRevisao
+   })
     .then(data => {
       res.status(201).json({ message: "Nova proposta criada", location: "/propostas/" + data.id_proposta });
     })
