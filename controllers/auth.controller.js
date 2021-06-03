@@ -102,8 +102,9 @@ exports.signin = async (req, res) => {
             expiresIn: 86400 // 24 hours
         });
         return res.status(200).json({
-            id: user.id_user, username: user.nome,
-            email: user.email, accessToken: token
+            // id: user.id_user, username: user.nome,
+            // email: user.email, accessToken: token
+            aTuaTia: boa
         });
     } catch (err) { res.status(500).json({ message: err.message }); };
 };
@@ -142,7 +143,7 @@ exports.isAdmin = async (req, res, next) => {
 exports.isAdminOrLoggedUser = async (req, res, next) => {
     let user = User.findByPk(req.loggedUserId)
     let role = user.id_tipo_user
-    if(role === 1){
+    if(role === 1 || user.id_user == req.params.userID){
         return next()
     }
     return res.status(403).send({
