@@ -104,7 +104,7 @@ exports.signin = async (req, res) => {
         return res.status(200).json({
             // id: user.id_user, username: user.nome,
             // email: user.email, accessToken: token
-            aTuaTia: boa
+            aTuaTia: "toda boa"
         });
     } catch (err) { res.status(500).json({ message: err.message }); };
 };
