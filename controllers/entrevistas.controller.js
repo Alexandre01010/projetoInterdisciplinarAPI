@@ -8,28 +8,15 @@ const { user, entrevista } = require("../models/db.js");
 
 
 //-------------- For route => '/'  ---------------------------------
-//get all entrevistas for testing purpases
-exports.findAllEntrevista = (req, res) => {
-    Entrevistas.findAll()
-        .then(data => {
-            if (data === null)
-                res.status(404).json({
-                    message: `No Entrevistas where found at ${req}.`
-                });
-            else
-                res.json(data);
-        })
-        .catch(err => {
-            res.status(500).json({
-                message:
-                    err.message || "Some error occurred while retrieving the Entrevistas."
-            });
-        });
-};
 
 
+// getting the entrevistas with filter setup
 exports.findEntrevistaFilterd = (req,res) => {
-    ///entrevistas?text=:searchText&cargo=:selectedCargo    
+    ///entrevistas?text=:searchText&cargo=:selectedCargo
+    
+    //for the user part, sence its reciving the user id from the loggedin user token header, we will do another type for testing purpases from postman
+    
+    const test_user = req.query.testlog; // this will be removed and also from the filter from postman
 
     // testing if its reciving the data correctly
     const test_text = req.query.text;
@@ -37,11 +24,13 @@ exports.findEntrevistaFilterd = (req,res) => {
     //const logged_userID = 
     console.log("heres the text: "+ test_text)
     console.log("heres the cargo: " + cargo_req)
+    console.log("heres the mockup loggedUser: " + test_user)
 
     
-    const whitelist = ['text', 'cargo', 'id']; // we will set the id aside for later on the userlogged in
-    let condition1 = {}
-    let condition2 = {}
+    const whitelist = ['text', 'cargo']; // we will set the id aside for later on the userlogged in
+    let condition1 = {} // condition for entrevista texto
+    let condition2 = {} // condition for cargo/creator of the entrevista
+    let condition3 = {} // condition for the logged user
     
     Object.keys(req.query).forEach(function (key) {
         if (!whitelist.includes(key))
@@ -52,51 +41,42 @@ exports.findEntrevistaFilterd = (req,res) => {
         if (key == "cargo")
             condition2.id_tipo_user = { [Op.like]: `%${req.query[key]}%` }
         
-    });
-
-    //notes on how to apply the last filter, the logged user
-    // check the logged useds creations and participations
-    
-
-
-
-    // after the condition is built, apply said filter
-    // {where:{texto_agenda: req.query.text},include:{model: user , where:{id_tipo_user: req.query.cargo}}}
-    Entrevistas.findAndCountAll({where:condition1,include:{model: user ,where:condition2}})
-        .then(data_text =>{
-            if (data_text === null||data_text.count==0 ){
-                res.status(404).json({
-                    message: `No Entrevistas where found with the current condition: ${req.query.text} , ${req.query.cargo} .`
-                });
-            }
-            else{
-                console.log(data_text) // testing purpases
-                res.json(data_text)
-
-            }
-
-        })
-        .catch(err => {
-            res.status(500).json({
-                message:
-                    err.message || "Some error occurred while retrieving the Entrevistas."
-            });
-        });
-
         
-
-
-
-
-
+        
+    });
+    // the id will look like this probably req.loggedUserId
+    if(req.query.testlog)
+        condition2.id_user = { [Op.like]: `%${req.query.testlog}%` }
+        condition3.id_user = { [Op.like]: `%${req.query.testlog}%` }
+    
 
     
+    // {where:{texto_agenda: req.query.text},include:{model: user , where:{id_tipo_user: req.query.cargo}}}
+
+    Entrevistas.findAndCountAll({where:condition1,include:[ 
+        {model: User, as: 'creator', where: condition2  },
+        {model: User, through: { attributes: [] },where: condition3} // remove ALL data retrieved from join table       
+    ]})
+        .then(data =>{
+
+            if (data === null ||data.count==0)
+            res.status(404).json({ message: `No Entrevistas where found with the current condition: ${req.query.text} , ${req.query.cargo}` });
+            else
+            res.status(200).json(data);
+            
+        })
+        .catch (err =>{ 
+            res.status(500).json({
+                message: err.message || `Some error occurred while retrieving the Entrevistas..`
+            });
+        })
+
 
     
 }
 
 
-
+// adding/creating a new entrevista to the DB
 exports.createEntrevista = (req, res) => {
     if (!req.body || !req.body.type) {
         res.status(400).json({ message: "Os dados não podem estar vazios!" });
@@ -117,7 +97,9 @@ exports.createEntrevista = (req, res) => {
         });
 };
 
-//----------------------------- For route => '/:idEntrevista'
+//----------------------------- For route => '/:idEntrevista'-----------------
+
+// updating entrevista
 exports.updateEntrevista = (req, res) => {
     // validate request body data
     if (!req.body || !req.body.type) {
