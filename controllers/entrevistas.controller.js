@@ -12,6 +12,7 @@ const { user, entrevista } = require("../models/db.js");
 
 // getting the entrevistas with filter setup
 exports.findEntrevistaFilterd = (req,res) => {
+    
     ///entrevistas?text=:searchText&cargo=:selectedCargo
     
     //for the user part, sence its reciving the user id from the loggedin user token header, we will do another type for testing purpases from postman
@@ -27,10 +28,12 @@ exports.findEntrevistaFilterd = (req,res) => {
     console.log("heres the mockup loggedUser: " + test_user)
 
     
-    const whitelist = ['text', 'cargo']; // we will set the id aside for later on the userlogged in
-    let condition1 = {} // condition for entrevista texto
-    let condition2 = {} // condition for cargo/creator of the entrevista
+    const whitelist = ['text', 'cargo', 'testlog']; // we will set the id aside for later on the userlogged in
+    let condition1 = {}// condition for entrevista texto
+    let condition2 = {}// condition for cargo/creator of the entrevista
     let condition3 = {} // condition for the logged user
+    
+    
     
     Object.keys(req.query).forEach(function (key) {
         if (!whitelist.includes(key))
@@ -39,30 +42,28 @@ exports.findEntrevistaFilterd = (req,res) => {
         if (key == "text")
             condition1.texto_agenda = { [Op.like]: `%${req.query[key]}%` }
         if (key == "cargo")
-            condition2.id_tipo_user = { [Op.like]: `%${req.query[key]}%` }
+            condition2.id_tipo_user = { [Op.like]: `%${req.query[key]}%` }        
         
-        
+
+        if (key == "testlog")// the id will look like this probably req.loggedUserId
+            //condition2.id_user = { [Op.like]: `%${req.query[key]}%` }
+            condition3.id_user = { [Op.like]: `%${req.query[key]}%` } 
+
         
     });
-    // the id will look like this probably req.loggedUserId
-    if(req.query.testlog)
-        condition2.id_user = { [Op.like]: `%${req.query.testlog}%` }
-        condition3.id_user = { [Op.like]: `%${req.query.testlog}%` }
     
 
     
-    // {where:{texto_agenda: req.query.text},include:{model: user , where:{id_tipo_user: req.query.cargo}}}
-
     Entrevistas.findAndCountAll({where:condition1,include:[ 
-        {model: User, as: 'creator', where: condition2  },
-        {model: User, through: { attributes: [] },where: condition3} // remove ALL data retrieved from join table       
+        {model: User, as: 'creator' , where:condition2 },
+        {model: User, through: { attributes: [] },where:condition3} // remove ALL data retrieved from join table       
     ]})
         .then(data =>{
 
             if (data === null ||data.count==0)
-            res.status(404).json({ message: `No Entrevistas where found with the current condition: ${req.query.text} , ${req.query.cargo}` });
+                res.status(404).json({ message: `No Entrevistas where found with the current condition: ${req.query.text} , ${req.query.cargo}` });
             else
-            res.status(200).json(data);
+                res.status(200).json(data);
             
         })
         .catch (err =>{ 
@@ -72,20 +73,19 @@ exports.findEntrevistaFilterd = (req,res) => {
         })
 
 
+
     
 }
 
 
 // adding/creating a new entrevista to the DB
 exports.createEntrevista = (req, res) => {
-    if (!req.body || !req.body.type) {
-        res.status(400).json({ message: "Os dados não podem estar vazios!" });
-        return;
-    }
+    
+    // somehow the id ends up null but it does put a new entrevista
 
     Entrevistas.create(req.body)
         .then(data => {
-            res.status(201).json({ message: "Nova entrevista criada", location: "/entrevistas/" + req.body.id_agenda });
+            res.status(201).json({ message: "Nova entrevista criada", location: "/entrevistas/" + data.id_agenda });
         })
         .catch(err => {
             if (err.name === 'SequelizeValidationError')
