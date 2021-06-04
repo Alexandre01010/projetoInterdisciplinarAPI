@@ -1,6 +1,7 @@
 const express = require('express');
 let router = express.Router();
 const propostasController = require('../controllers/propostas.controller.js');
+const authController = require("../controllers/auth.controller")
 const { proposta } = require('../models/db');
 // middleware for all routes related with tutorials
 router.use((req, res, next) => {
@@ -14,7 +15,7 @@ router.use((req, res, next) => {
 
 router.route('/')
     .get(propostasController.findPropostasFiltered)
-    .post(propostasController.create)
+    .post(authController.verifyToken, propostasController.create)
 
 router.route('/:proposalID')
     .delete(propostasController.deleteProposal)

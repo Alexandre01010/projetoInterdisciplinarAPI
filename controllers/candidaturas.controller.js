@@ -27,10 +27,6 @@ exports.getCandidaturas = (req, res) => {
 }
 
 exports.createCandidatura = (req, res) => {
-  let token = req.headers["x-access-token"]
-  jwt.verify(token, config.secret, (err, decoded) => {
-    req.loggedUserId = decoded.id
-  });
   Proposta.findByPk(req.params.proposalID)
     .then(prop => {
       if (prop === null) {

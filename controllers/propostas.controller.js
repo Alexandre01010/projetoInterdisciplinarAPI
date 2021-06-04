@@ -7,10 +7,6 @@ const candidaturaVar = db.candidatura
 const { Op } = require("sequelize")
 
 exports.create = (req, res) => {
-  let token = req.headers["x-access-token"]
-  jwt.verify(token, config.secret, (err, decoded) => {
-    req.loggedUserId = decoded.id
-  });
   // Save Tutorial in the database
   Proposta.create({ titulo: req.body.titulo, objetivos: req.body.objetivos, resultados_esperados: req.body.resultados_esperados,
     outros_dados: req.body.outros_dados, plano_provisorio_trabalho: req.body.plano_provisorio_trabalho, 
