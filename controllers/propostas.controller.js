@@ -5,7 +5,8 @@ const Proposta = db.proposta;
 const candidaturaVar = db.candidatura
 const User = db.user
 
-const { Op } = require("sequelize")
+const { Op } = require("sequelize");
+const { proposta } = require("../models/db.js");
 
 exports.create = (req, res) => {
   // Save Tutorial in the database
@@ -200,7 +201,7 @@ exports.findPropostasFiltered = (req, res) => {
 exports.findApprovedProposals = (req, res) => {
   if (req.query.type || req.query.state || req.query.text) {
     const whitelist = ['type', 'state', 'text'];
-    let condition = {id_tipo_estado: 3};
+    let condition = { id_tipo_estado: 3 };
     Object.keys(req.query).forEach(function (key) {
       if (!whitelist.includes(key))
         return; //inform user of BAD REQUEST           
@@ -303,6 +304,42 @@ exports.ProposalForApproval = (req, res) => {
       res.status(200).json(data)
     })
     .catch(err => {
+      res.status(500).json({
+        message:
+          err.message || "Ocorreu um erro ao encontrar propostas",
+      });
+    })
+}
+
+exports.updateProposalState = (req, res) => {
+  Proposta.findByPk(req.params.proposalID)
+    .then((data) => {
+      if (data === null) {
+        res.status(404).json({
+          message: "Não foi encontrado nenhuma proposta com esse id"
+        })
+      } else {
+        Proposta.update({ id_tipo_estado: req.body.id_tipo_estado }, { where: { id_proposta: req.params.proposalID } })
+          .then((prop) => {
+            if (prop == 1) {
+              res.status(200).json({
+                message: "Estado da proposta alterado"
+              })
+            } else {
+              res.status(404).json({
+                message: "Proposta não encontrada"
+              })
+            }
+          })
+          .catch((err) => {
+            res.status(500).json({
+              message:
+                err.message || "Ocorreu um erro ao encontrar propostas",
+            });
+          })
+      }
+    })
+    .catch((err) => {
       res.status(500).json({
         message:
           err.message || "Ocorreu um erro ao encontrar propostas",

@@ -24,9 +24,11 @@ router.route('/pending')
 router.route('/approved')
     .get(authController.verifyToken, propostasController.findApprovedProposals)
 
+
 router.route('/:proposalID')
     .delete(authController.verifyToken, propostasController.deleteProposal)
     .get(propostasController.getOne)
+    .put(authController.verifyToken, authController.isAdmin, propostasController.updateProposalState)
 
 //router.route('/candidaturas', require('./candidaturas.routes'))
 
