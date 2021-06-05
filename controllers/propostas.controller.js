@@ -93,33 +93,29 @@ exports.deleteProposal = (req, res) => {
     .then((prop) => {
       if (prop === null) {
         res.status(404).json({
-          message: "Propostas não encontrada"
+          message: "Proposta não encontrada"
         })
       } else {
         User.findByPk(prop.id_user_autor)
           .then((data) => {
-            console.log(req.loggedUserId)
-            if (data.id_tipo_user == 1 || prop.id_user_autor == req.loggedUserId) {
-              Proposta.destroy({ where: { id_proposta: req.params.proposalID } })
-                .then((proposta) => {
-                  if (proposta == 1) {
-                    res.status(200).json({
-                      message: "Proposta " + req.params.proposalID + " foi eliminada com sucesso"
+            console.log(data.id_tipo_user)
+            User.findByPk(req.loggedUserId)
+              .then((isAdminVerify) => {
+                if (prop.id_user_autor == req.loggedUserId || isAdminVerify.id_tipo_user == 1) {
+                  Proposta.destroy({ where: { id_proposta: req.params.proposalID } })
+                    .then((del) => {
+                      if (del == 1) {
+                        res.status(200).json({
+                          message: "Proposta eliminada com sucesso!"
+                        })
+                      }
                     })
-                  }
-                })
-                .catch(err => {
-                  if (err.name === "SequelizeForeignKeyConstraintError") {
-                    res.status(500).json({
-                      message: "Não foi possivel eliminar a proposta com id " + req.params.proposalID + " pois tem candidaturas associadas"
-                    })
-                  }
-                })
-            }else{
-              res.status(403).json({
-                message:"Não podes eliminar uma proposta que não é tua!"
+                } else {
+                  res.status(403).json({
+                    message: "Não podes eliminar esta proposta"
+                  })
+                }
               })
-            }
           })
       }
     })
