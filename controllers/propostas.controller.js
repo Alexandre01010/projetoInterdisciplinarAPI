@@ -159,13 +159,14 @@ exports.findPropostasFiltered = (req, res) => {
 exports.getMyPropostaFiltered = (req, res) => {
   if (req.query.type || req.query.state || req.query.text) {
     const whitelist = ['type', 'state', 'text'];
-    let condition = {};
+    let condition = {id_user_autor: req.loggedUserId};
     Object.keys(req.query).forEach(function (key) {
       if (!whitelist.includes(key))
         return; //inform user of BAD REQUEST           
       if (key == "type") {
         if (req.query[key] == "estagio") {
           condition.email = { [Op.not]: null }
+          console.log(condition)
         } else {
           if (req.query[key] == "projeto") {
             condition.email = { [Op.is]: null }
@@ -178,9 +179,7 @@ exports.getMyPropostaFiltered = (req, res) => {
         condition.id_tipo_estado = parseInt(req.query[key])
       }
     });
-    Proposta.findAll({
-      where: condition, id_user_autor: req.loggedUserId
-})
+   Proposta.findAll({ where: condition })
       .then(data => {
         res.status(200).json(data);
       })
