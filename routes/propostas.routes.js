@@ -14,8 +14,9 @@ router.use((req, res, next) => {
 })
 
 router.route('/')
-    .get(propostasController.findPropostasFiltered)
+    //.get(propostasController.findPropostasFiltered)
     .post(authController.verifyToken, propostasController.create)
+    .get(authController.verifyToken, propostasController.getMyPropostaFiltered)
 
 router.route('/:proposalID')
     .delete(propostasController.deleteProposal)

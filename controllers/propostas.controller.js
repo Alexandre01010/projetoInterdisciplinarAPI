@@ -8,16 +8,17 @@ const { Op } = require("sequelize")
 
 exports.create = (req, res) => {
   // Save Tutorial in the database
-  Proposta.create({ titulo: req.body.titulo, objetivos: req.body.objetivos, resultados_esperados: req.body.resultados_esperados,
-    outros_dados: req.body.outros_dados, plano_provisorio_trabalho: req.body.plano_provisorio_trabalho, 
+  Proposta.create({
+    titulo: req.body.titulo, objetivos: req.body.objetivos, resultados_esperados: req.body.resultados_esperados,
+    outros_dados: req.body.outros_dados, plano_provisorio_trabalho: req.body.plano_provisorio_trabalho,
     perfil_candidato_desejado: req.body.perfil_candidato_desejado,
-    nome_tutor: req.body.nome_tutor, cargo_tutor: req.body.cargo_tutor, contato: req.body.contato, 
+    nome_tutor: req.body.nome_tutor, cargo_tutor: req.body.cargo_tutor, contato: req.body.contato,
     recursos_necessarios: req.body.recursos_necessarios,
-    id_prof_orientador: req.body.id_prof_orientador, id_user_autor: req.loggedUserId, id_tipo_estado: 1, 
-    nome_entidade: req.body.nome_entidade, 
+    id_prof_orientador: req.body.id_prof_orientador, id_user_autor: req.loggedUserId, id_tipo_estado: 1,
+    nome_entidade: req.body.nome_entidade,
     morada_entidade: req.body.morada_entidade,
     codigo_postal: req.body.codigo_postal, email: req.body.email, msgRevisao: req.body.msgRevisao
-   })
+  })
     .then(data => {
       res.status(201).json({ message: "Nova proposta criada", location: "/propostas/" + data.id_proposta });
     })
@@ -58,10 +59,6 @@ exports.create = (req, res) => {
 // };
 
 exports.deleteProposal = (req, res) => {
-  let token = req.headers["x-access-token"]
-  jwt.verify(token, config.secret, (err, decoded) => {
-    req.loggedUserId = decoded.id
-  });
   Proposta.findByPk(req.params.proposalID)
     .then((prop) => {
       if (prop === null) {
@@ -115,22 +112,22 @@ exports.findPropostasFiltered = (req, res) => {
     const whitelist = ['type', 'state', 'text'];
     let condition = {};
     Object.keys(req.query).forEach(function (key) {
-        if (!whitelist.includes(key))
-            return; //inform user of BAD REQUEST           
-        if (key == "type"){
-          if (req.query[key] == "estagio"){
-            condition.email = { [Op.not]: null }
-          }else{
-            if (req.query[key] == "projeto"){
-              condition.email = { [Op.is]: null }
-            }
-          }          
+      if (!whitelist.includes(key))
+        return; //inform user of BAD REQUEST           
+      if (key == "type") {
+        if (req.query[key] == "estagio") {
+          condition.email = { [Op.not]: null }
+        } else {
+          if (req.query[key] == "projeto") {
+            condition.email = { [Op.is]: null }
+          }
         }
-        if (key == "text")
-            condition.titulo = { [Op.like]: `%${req.query[key]}%` }
-        if (key == "state"){
-            condition.id_tipo_estado = parseInt(req.query[key])
-        }
+      }
+      if (key == "text")
+        condition.titulo = { [Op.like]: `%${req.query[key]}%` }
+      if (key == "state") {
+        condition.id_tipo_estado = parseInt(req.query[key])
+      }
     });
     Proposta.findAll({
       where: condition
@@ -147,6 +144,57 @@ exports.findPropostasFiltered = (req, res) => {
   }
   else {
     Proposta.findAll(req.body)
+      .then(data => {
+        res.status(200).json(data);
+      })
+      .catch((err) => {
+        res.status(500).json({
+          message:
+            err.message || "Ocorreu um erro ao encontrar propostas",
+        });
+      });
+  }
+}
+
+exports.getMyPropostaFiltered = (req, res) => {
+  if (req.query.type || req.query.state || req.query.text) {
+    const whitelist = ['type', 'state', 'text'];
+    let condition = {};
+    Object.keys(req.query).forEach(function (key) {
+      if (!whitelist.includes(key))
+        return; //inform user of BAD REQUEST           
+      if (key == "type") {
+        if (req.query[key] == "estagio") {
+          condition.email = { [Op.not]: null }
+        } else {
+          if (req.query[key] == "projeto") {
+            condition.email = { [Op.is]: null }
+          }
+        }
+      }
+      if (key == "text")
+        condition.titulo = { [Op.like]: `%${req.query[key]}%` }
+      if (key == "state") {
+        condition.id_tipo_estado = parseInt(req.query[key])
+      }
+    });
+    Proposta.findAll({
+      where: condition, id_user_autor: req.loggedUserId
+})
+      .then(data => {
+        res.status(200).json(data);
+      })
+      .catch(err => {
+        res.status(500).json({
+          message:
+            err.message || "Ocorreu um erro ao encontrar propostas"
+        });
+      });
+  }else{
+    console.log(req.loggedUserId)
+    Proposta.findAll({
+      where: { id_user_autor: req.loggedUserId }
+    })
       .then(data => {
         res.status(200).json(data);
       })
