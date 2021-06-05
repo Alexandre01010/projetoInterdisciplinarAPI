@@ -21,6 +21,9 @@ router.route('/')
 router.route('/pending')
     .get(authController.verifyToken, authController.isAdmin, propostasController.ProposalForApproval)
 
+router.route('/approved')
+    .get(authController.verifyToken, propostasController.findApprovedProposals)
+
 router.route('/:proposalID')
     .delete(authController.verifyToken, propostasController.deleteProposal)
     .get(propostasController.getOne)
