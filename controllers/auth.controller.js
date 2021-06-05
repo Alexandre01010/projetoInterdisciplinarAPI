@@ -120,9 +120,8 @@ exports.verifyToken = (req, res, next) => {
 }
 
 exports.isAdmin = async (req, res, next) => {
-    let user = User.findByPk(req.loggedUserId)
-    let role = user.id_tipo_user
-
+    let user = await User.findByPk(req.loggedUserId)
+    let role = await user.id_tipo_user
     if(role == 1){
         return next()
     }

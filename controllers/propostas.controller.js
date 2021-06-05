@@ -159,7 +159,7 @@ exports.findPropostasFiltered = (req, res) => {
 exports.getMyPropostaFiltered = (req, res) => {
   if (req.query.type || req.query.state || req.query.text) {
     const whitelist = ['type', 'state', 'text'];
-    let condition = {id_user_autor: req.loggedUserId};
+    let condition = { id_user_autor: req.loggedUserId };
     Object.keys(req.query).forEach(function (key) {
       if (!whitelist.includes(key))
         return; //inform user of BAD REQUEST           
@@ -179,7 +179,7 @@ exports.getMyPropostaFiltered = (req, res) => {
         condition.id_tipo_estado = parseInt(req.query[key])
       }
     });
-   Proposta.findAll({ where: condition })
+    Proposta.findAll({ where: condition })
       .then(data => {
         res.status(200).json(data);
       })
@@ -189,7 +189,7 @@ exports.getMyPropostaFiltered = (req, res) => {
             err.message || "Ocorreu um erro ao encontrar propostas"
         });
       });
-  }else{
+  } else {
     console.log(req.loggedUserId)
     Proposta.findAll({
       where: { id_user_autor: req.loggedUserId }
@@ -204,4 +204,18 @@ exports.getMyPropostaFiltered = (req, res) => {
         });
       });
   }
+}
+
+exports.ProposalForApproval = (req, res) => {
+  let condition = { id_tipo_estado: 1 }
+  Proposta.findAll({ where: condition })
+    .then((data) => {
+      res.status(200).json(data)
+    })
+    .catch(err => {
+      res.status(500).json({
+        message:
+          err.message || "Ocorreu um erro ao encontrar propostas",
+      });
+    })
 }
