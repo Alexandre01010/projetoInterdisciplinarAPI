@@ -3,6 +3,7 @@ const jwt = require("jsonwebtoken");
 const config = require("../config/auth.config.js");
 const Proposta = db.proposta;
 const candidaturaVar = db.candidatura
+const User = db.user
 
 const { Op } = require("sequelize")
 
@@ -58,31 +59,75 @@ exports.create = (req, res) => {
 //     });
 // };
 
+// exports.deleteProposal = (req, res) => {
+//   Proposta.findByPk(req.params.proposalID)
+//     .then((prop) => {
+//       let autor = prop.id_user_autor
+//       if (prop === null) {
+//         res.status(404).json({
+//           message: "Proposta " + req.params.proposalID + " não existe"
+//         })
+//       } else {
+//         Proposta.destroy({ where: { id_proposta: req.params.proposalID } })
+//           .then((data) => {
+//             if (data == 1) {
+//               res.status(200).json({
+//                 message: "Proposta " + req.params.proposalID + " foi eliminada com sucesso"
+//               })
+//             }
+//           })
+//           .catch((err) => {
+//             if (err.name === "SequelizeForeignKeyConstraintError") {
+//               res.status(500).json({
+//                 message: "Não foi possivel eliminar a proposta com id " + req.params.proposalID + " pois tem candidaturas associadas"
+//               })
+//             }
+
+//           })
+//       }
+//     })
+// }
+
 exports.deleteProposal = (req, res) => {
   Proposta.findByPk(req.params.proposalID)
     .then((prop) => {
       if (prop === null) {
         res.status(404).json({
-          message: "Proposta " + req.params.proposalID + " não existe"
+          message: "Propostas não encontrada"
         })
       } else {
-        Proposta.destroy({ where: { id_proposta: req.params.proposalID } })
+        User.findByPk(prop.id_user_autor)
           .then((data) => {
-            if (data == 1) {
-              res.status(200).json({
-                message: "Proposta " + req.params.proposalID + " foi eliminada com sucesso"
+            console.log(req.loggedUserId)
+            if (data.id_tipo_user == 1 || prop.id_user_autor == req.loggedUserId) {
+              Proposta.destroy({ where: { id_proposta: req.params.proposalID } })
+                .then((proposta) => {
+                  if (proposta == 1) {
+                    res.status(200).json({
+                      message: "Proposta " + req.params.proposalID + " foi eliminada com sucesso"
+                    })
+                  }
+                })
+                .catch(err => {
+                  if (err.name === "SequelizeForeignKeyConstraintError") {
+                    res.status(500).json({
+                      message: "Não foi possivel eliminar a proposta com id " + req.params.proposalID + " pois tem candidaturas associadas"
+                    })
+                  }
+                })
+            }else{
+              res.status(403).json({
+                message:"Não podes eliminar uma proposta que não é tua!"
               })
             }
-          })
-          .catch((err) => {
-            if (err.name === "SequelizeForeignKeyConstraintError") {
-              res.status(500).json({
-                message: "Não foi possivel eliminar a proposta com id " + req.params.proposalID + " pois tem candidaturas associadas"
-              })
-            }
-
           })
       }
+    })
+    .catch(err => {
+      res.status(500).json({
+        message:
+          err.message || "Ocorreu um erro ao encontrar propostas",
+      });
     })
 }
 
