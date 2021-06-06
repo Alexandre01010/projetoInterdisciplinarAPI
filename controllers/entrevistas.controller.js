@@ -13,27 +13,25 @@ const { user, entrevista } = require("../models/db.js");
 // getting the entrevistas with filter setup
 exports.findEntrevistaFilterd = (req,res) => {
     
-    ///entrevistas?text=:searchText&cargo=:selectedCargo
     
-    //for the user part, sence its reciving the user id from the loggedin user token header, we will do another type for testing purpases from postman
     
-    const test_user = req.query.testlog; // this will be removed and also from the filter from postman
-
-    // testing if its reciving the data correctly
+    
+    //Console logs for checking and confermation of recived query data
+    const loggedUser = req.query.testlog;    
     const test_text = req.query.text;
     const cargo_req = req.query.cargo;
-    //const logged_userID = 
+    
     console.log("heres the text: "+ test_text)
     console.log("heres the cargo: " + cargo_req)
-    console.log("heres the mockup loggedUser: " + test_user)
+    console.log("heres the mockup loggedUser: " + loggedUser)
 
     
-    const whitelist = ['text', 'cargo', 'testlog']; // we will set the id aside for later on the userlogged in
+    const whitelist = ['text', 'cargo', 'loggedUser']; // whitelist of keys to fill the conditions
     let condition1 = {}// condition for entrevista texto
     let condition2 = {}// condition for cargo/creator of the entrevista
     let condition3 = {} // condition for the logged user
     
-    
+    // condtion to fill the conditions acording with the queries recived
     
     Object.keys(req.query).forEach(function (key) {
         if (!whitelist.includes(key))
@@ -41,25 +39,25 @@ exports.findEntrevistaFilterd = (req,res) => {
             
         if (key == "text")
             condition1.texto_agenda = { [Op.like]: `%${req.query[key]}%` }
+
         if (key == "cargo")
             condition2.id_tipo_user = { [Op.like]: `%${req.query[key]}%` }        
         
 
-        if (key == "testlog")// the id will look like this probably req.loggedUserId
-            //condition2.id_user = { [Op.like]: `%${req.query[key]}%` }
+        if (key == "loggedUser")          
             condition3.id_user = { [Op.like]: `%${req.query[key]}%` } 
 
         
     });
     
 
-    
+    // find and count all according to the queries recived in the conditions to search on the db 
     Entrevistas.findAndCountAll({where:condition1,include:[ 
         {model: User, as: 'creator' , where:condition2 },
         {model: User, through: { attributes: [] },where:condition3} // remove ALL data retrieved from join table       
     ]})
         .then(data =>{
-
+            // if no entrevistas was not found, then return a 404 message , if not then it will respond with the data retrived
             if (data === null ||data.count==0)
                 res.status(404).json({ message: `No Entrevistas where found with the current condition: ${req.query.text} , ${req.query.cargo}` });
             else
@@ -80,9 +78,13 @@ exports.findEntrevistaFilterd = (req,res) => {
 
 // adding/creating a new entrevista to the DB
 exports.createEntrevista = (req, res) => {
-    
-    // somehow the id ends up null but it does put a new entrevista
 
+    // validate request body data
+    if (!req.body || !req.body.type) {
+        res.status(400).json({ message: "Os dados não podem estar vazios!" });
+        return;
+    }
+    // create a new entrevista acording with the data recived
     Entrevistas.create(req.body)
         .then(data => {
             res.status(201).json({ message: "Nova entrevista criada", location: "/entrevistas/" + data.id_agenda });
@@ -138,6 +140,7 @@ exports.updateEntrevista = (req, res) => {
 
 //---------------controlls for the entrevista:user (particiopantes from the entrevista)-----------------------
 
+// find the participantes of a specific entrevista
 exports.findParticipantes = (req, res) => {
 
     Entrevistas.findByPk(req.params.idEntrevista,
@@ -163,6 +166,7 @@ exports.findParticipantes = (req, res) => {
 
 }
 
+// adding a particcipant to the entrevista with :idEntrevista
 exports.addParticipante = (req, res) => {
 
     Entrevistas.findByPk(req.params.idEntrevista)
@@ -205,7 +209,7 @@ exports.addParticipante = (req, res) => {
         });
 
 }
-
+// remove a participante from a specific entrevista
 exports.deleteParticipante = (req, res) => {
 
     Entrevistas.findByPk(req.params.idEntrevista)

@@ -12,26 +12,24 @@ router.use((req, res, next) => {
     next()
 })
 
-//-----Routes setup 
+//--------------------Routes setup -------------------------------------
+//base route for entrevistas
 router.route('/')        
     .get(entrevistasController.findEntrevistaFilterd)
-    .post(entrevistasController.createEntrevista)
+    .post(entrevistasController.createEntrevista);
 
+//routes for an entrevista
 router.route('/:idEntrevista')
-    .put(entrevistasController.updateEntrevista)
+    .put(entrevistasController.updateEntrevista);
 
 
 //routes for the participates entrevista:user
 router.route('/:idEntrevista/participantes')
-    .get(entrevistasController.findParticipantes)
+    .get(entrevistasController.findParticipantes);
+
 router.route('/:idEntrevista/participantes/:idParticipante')
     .post(entrevistasController.addParticipante) 
-    .delete(entrevistasController.deleteParticipante)
-/*    
-router.route('/entrevistas?text=:searchText&cargo=:selectedCargo')
-    .get(entrevistasController.findEntrevistaFilterd) */
-
-
+    .delete(entrevistasController.deleteParticipante);
 
 
     
