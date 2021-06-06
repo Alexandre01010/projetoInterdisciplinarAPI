@@ -18,7 +18,7 @@ router.use((req, res, next) => {
 })
 
 router.route('/:proposalID')
-    .post(authController.verifyToken, candidaturaController.createCandidatura)
+    .post(authController.verifyToken, authController.isStudent, candidaturaController.createCandidatura)
 
 router.route('/')
     .get(candidaturaController.getCandidaturas)
