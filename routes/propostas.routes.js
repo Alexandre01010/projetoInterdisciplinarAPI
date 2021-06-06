@@ -30,6 +30,9 @@ router.route('/:proposalID')
     .get(propostasController.getOne)
     .put(authController.verifyToken, authController.isAdmin, propostasController.updateProposalState)
 
+router.route('/:proposalID/data')
+    .put(authController.verifyToken, propostasController.updateProposal)
+
 //router.route('/candidaturas', require('./candidaturas.routes'))
 
 router.use('/:proposalID/candidaturas', require('./candidaturas.routes'))

@@ -346,3 +346,30 @@ exports.updateProposalState = (req, res) => {
       });
     })
 }
+
+exports.updateProposal = (req, res) => {
+  Proposta.findByPk(req.params.proposalID)
+    .then((data) => {
+      if (data.id_user_autor == req.loggedUserId) {
+        Proposta.update(req.body, { where: { id_proposta: req.params.proposalID } })
+          .then((prop) => {
+            if (prop == 1) {
+              res.status(200).json({
+                message: "Proposta alterada com sucesso"
+              })
+            }
+          })
+      } else {
+        res.status(403).json({
+          message: "Não podes alterar uma proposta que não é tua"
+        })
+
+      }
+    })
+    .catch(err => {
+      res.status(500).json({
+        message:
+          err.message || "Ocorreu um erro ao encontrar propostas",
+      });
+    })
+}
