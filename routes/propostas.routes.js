@@ -1,6 +1,7 @@
 const express = require('express');
 let router = express.Router();
 const propostasController = require('../controllers/propostas.controller.js');
+const authController = require("../controllers/auth.controller")
 const { proposta } = require('../models/db');
 // middleware for all routes related with tutorials
 router.use((req, res, next) => {
@@ -13,12 +14,21 @@ router.use((req, res, next) => {
 })
 
 router.route('/')
-    .get(propostasController.findPropostasFiltered)
-    .post(propostasController.create)
+    //.get(propostasController.findPropostasFiltered)
+    .post(authController.verifyToken, propostasController.create)
+    .get(authController.verifyToken, propostasController.getMyPropostaFiltered)
+
+router.route('/pending')
+    .get(authController.verifyToken, authController.isAdmin, propostasController.ProposalForApproval)
+
+router.route('/approved')
+    .get(authController.verifyToken, propostasController.findApprovedProposals)
+
 
 router.route('/:proposalID')
-    .delete(propostasController.deleteProposal)
+    .delete(authController.verifyToken, propostasController.deleteProposal)
     .get(propostasController.getOne)
+    .put(authController.verifyToken, authController.isAdmin, propostasController.updateProposalState)
 
 //router.route('/candidaturas', require('./candidaturas.routes'))
 
