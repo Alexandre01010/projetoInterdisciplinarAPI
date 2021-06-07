@@ -38,7 +38,7 @@ exports.findEntrevistaFilterd = (req,res) => {
             condition1.texto_agenda = { [Op.like]: `%${req.query[key]}%` }
 
         if (key == "cargo")
-            condition2.id_tipo_user = { [Op.like]: `%${req.query[key]}%` }        
+            condition2.id_tipo_user = { [Op.like]: `%${req.query[key]}%` }            
         
 
         if (key == "loggedUserId")          
