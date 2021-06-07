@@ -23,7 +23,7 @@ exports.findEntrevistaFilterd = (req,res) => {
     console.log("heres the mockup loggedUserId: " + loggedUser)
 
     
-    const whitelist = ['text', 'cargo', 'loggedUserId']; // whitelist of keys to fill the conditions
+    const whitelist = ['text', 'cargo']; // whitelist of keys to fill the conditions
     let condition1 = {}// condition for entrevista texto
     let condition2 = {}// condition for cargo/creator of the entrevista
     let condition3 = {} // condition for the logged user
@@ -40,12 +40,11 @@ exports.findEntrevistaFilterd = (req,res) => {
         if (key == "cargo")
             condition2.id_tipo_user = { [Op.like]: `%${req.query[key]}%` }            
         
-
-        if (key == "loggedUserId")          
-            condition3.id_user = { [Op.like]: `%${req[key]}%` } 
-
         
     });
+
+    // condtion for condtion3 in order to get entrevistas where the loggeduser is participating              
+    condition3.id_user = { [Op.like]: `%${req.loggedUserId}%` } 
     
 
     // find and count all according to the queries recived in the conditions to search on the db 
@@ -76,15 +75,13 @@ exports.findEntrevistaFilterd = (req,res) => {
 // adding/creating a new entrevista to the DB
 exports.createEntrevista = (req, res) => {
 
-    // validate request body data
-    if (!req.body || !req.body.type) {
-        res.status(400).json({ message: "Os dados não podem estar vazios!" });
-        return;
-    }
     // create a new entrevista acording with the data recived
-    Entrevistas.create(req.body)
+    Entrevistas.create({id_user: req.body.id_user,data_hora: req.body.data_hora,id_tipo_estado: req.body.id_tipo_estado,texto_agenda: req.body.texto_agenda})
         .then(data => {
-            res.status(201).json({ message: "Nova entrevista criada", location: "/entrevistas/" + data.id_agenda });
+            // so data.null is gonna be the new assined id_agenda, acording to console.log(data) id_agenda: null and because its null it will a sign a new id value
+                          
+            res.status(201).json({ message: "Nova entrevista criada", location: "/entrevistas/" + data.null });
+            
         })
         .catch(err => {
             if (err.name === 'SequelizeValidationError')
@@ -249,4 +246,6 @@ exports.deleteParticipante = (req, res) => {
         });
 
 }
+
+
 
