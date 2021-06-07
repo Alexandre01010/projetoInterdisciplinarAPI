@@ -1,6 +1,7 @@
 const express = require('express');
 let router = express.Router();
 const entrevistasController = require("../controllers/entrevistas.controller.js");
+const authController = require("../controllers/auth.controller")
 const { route } = require('./candidaturas.routes.js');
 
 router.use((req, res, next) => {
