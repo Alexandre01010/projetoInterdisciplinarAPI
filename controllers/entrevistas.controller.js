@@ -13,20 +13,17 @@ const { user, entrevista } = require("../models/db.js");
 // getting the entrevistas with filter setup
 exports.findEntrevistaFilterd = (req,res) => {
     
-    
-    
-    
     //Console logs for checking and confermation of recived query data
-    const loggedUser = req.query.testlog;    
+    const loggedUser = req.loggedUserId;    
     const test_text = req.query.text;
     const cargo_req = req.query.cargo;
     
     console.log("heres the text: "+ test_text)
     console.log("heres the cargo: " + cargo_req)
-    console.log("heres the mockup loggedUser: " + loggedUser)
+    console.log("heres the mockup loggedUserId: " + loggedUser)
 
     
-    const whitelist = ['text', 'cargo', 'loggedUser']; // whitelist of keys to fill the conditions
+    const whitelist = ['text', 'cargo', 'loggedUserId']; // whitelist of keys to fill the conditions
     let condition1 = {}// condition for entrevista texto
     let condition2 = {}// condition for cargo/creator of the entrevista
     let condition3 = {} // condition for the logged user
@@ -44,8 +41,8 @@ exports.findEntrevistaFilterd = (req,res) => {
             condition2.id_tipo_user = { [Op.like]: `%${req.query[key]}%` }        
         
 
-        if (key == "loggedUser")          
-            condition3.id_user = { [Op.like]: `%${req.query[key]}%` } 
+        if (key == "loggedUserId")          
+            condition3.id_user = { [Op.like]: `%${req[key]}%` } 
 
         
     });

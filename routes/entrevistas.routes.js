@@ -15,12 +15,12 @@ router.use((req, res, next) => {
 //--------------------Routes setup -------------------------------------
 //base route for entrevistas
 router.route('/')        
-    .get(entrevistasController.findEntrevistaFilterd)
-    .post(entrevistasController.createEntrevista);
+    .get(authController.verifyToken,entrevistasController.findEntrevistaFilterd)
+    .post(authController.verifyToken,entrevistasController.createEntrevista);
 
 //routes for an entrevista
 router.route('/:idEntrevista')
-    .put(entrevistasController.updateEntrevista);
+    .put(authController.verifyToken,entrevistasController.updateEntrevista);
 
 
 //routes for the participates entrevista:user
@@ -28,8 +28,8 @@ router.route('/:idEntrevista/participantes')
     .get(entrevistasController.findParticipantes);
 
 router.route('/:idEntrevista/participantes/:idParticipante')
-    .post(entrevistasController.addParticipante) 
-    .delete(entrevistasController.deleteParticipante);
+    .post(authController.verifyToken,entrevistasController.addParticipante) 
+    .delete(authController.verifyToken,entrevistasController.deleteParticipante);
 
 
     
