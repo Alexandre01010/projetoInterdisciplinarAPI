@@ -3,7 +3,9 @@ const Entrevistas = db.entrevista;
 const User = db.user;
 const Participantes = db.participante
 
-const {Op} = require('sequelize')
+//const {Op} = require('sequelize')
+
+const {Op, where} = require('sequelize')
 
 //const { Op, where } = require("sequelize");
 const { user, entrevista } = require("../models/db.js");
