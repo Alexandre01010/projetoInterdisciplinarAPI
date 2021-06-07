@@ -1,9 +1,11 @@
 const db = require("../models/db.js");
 const Entrevistas = db.entrevista;
 const User = db.user;
+const Participantes = db.participante
 
+const {Op} = require('sequelize')
 
-const { Op, where } = require("sequelize");
+//const { Op, where } = require("sequelize");
 const { user, entrevista } = require("../models/db.js");
 
 
@@ -11,77 +13,175 @@ const { user, entrevista } = require("../models/db.js");
 
 
 // getting the entrevistas with filter setup
-exports.findEntrevistaFilterd = (req,res) => {
-    
-    //Console logs for checking and confermation of recived query data
-    const loggedUser = req.loggedUserId;    
-    const test_text = req.query.text;
-    const cargo_req = req.query.cargo;
-    
-    console.log("heres the text: "+ test_text)
-    console.log("heres the cargo: " + cargo_req)
-    console.log("heres the mockup loggedUserId: " + loggedUser)
+// exports.findEntrevistaFilterd = (req,res) => {
 
-    
-    const whitelist = ['text', 'cargo']; // whitelist of keys to fill the conditions
-    let condition1 = {}// condition for entrevista texto
-    let condition2 = {}// condition for cargo/creator of the entrevista
-    let condition3 = {} // condition for the logged user
-    
-    // condtion to fill the conditions acording with the queries recived
-    
-    Object.keys(req.query).forEach(function (key) {
-        if (!whitelist.includes(key))
-            return; //inform user of BAD REQUEST
-            
-        if (key == "text")
-            condition1.texto_agenda = { [Op.like]: `%${req.query[key]}%` }
+//     //Console logs for checking and confermation of recived query data
+//     const loggedUser = req.loggedUserId;    
+//     const test_text = req.query.text;
+//     const cargo_req = req.query.cargo;
 
-        if (key == "cargo")
-            condition2.id_tipo_user = { [Op.like]: `%${req.query[key]}%` }            
-        
-        
-    });
+//     console.log("heres the text: "+ test_text)
+//     console.log("heres the cargo: " + cargo_req)
+//     console.log("heres the mockup loggedUserId: " + loggedUser)
 
-    // condtion for condtion3 in order to get entrevistas where the loggeduser is participating              
-    condition3.id_user = { [Op.like]: `%${req.loggedUserId}%` } 
+
+//     const whitelist = ['text', 'cargo']; // whitelist of keys to fill the conditions
+//     let condition1 = {}// condition for entrevista texto
+//     let condition2 = {}// condition for cargo/creator of the entrevista
+//     let condition3 = {} // condition for the logged user
+
+//     // condtion to fill the conditions acording with the queries recived
+
+//     Object.keys(req.query).forEach(function (key) {
+//         if (!whitelist.includes(key))
+//             return; //inform user of BAD REQUEST
+
+//         if (key == "text")
+//             condition1.texto_agenda = { [Op.like]: `%${req.query[key]}%` }
+
+//         if (key == "cargo")
+//             condition2.id_tipo_user = { [Op.like]: `%${req.query[key]}%` }            
+
+
+//     });
+
+//     // condtion for condtion3 in order to get entrevistas where the loggeduser is participating              
+//     condition3.id_user = { [Op.like]: `%${req.loggedUserId}%` } 
+
+
+//     // find and count all according to the queries recived in the conditions to search on the db 
+//     Entrevistas.findAndCountAll({where:condition1,include:[ 
+//         {model: User, as: 'creator' , where:condition2 },
+//         {model: User, through: { attributes: [] },where:condition3} // remove ALL data retrieved from join table       
+//     ]})
+//         .then(data =>{
+//             // if no entrevistas was not found, then return a 404 message , if not then it will respond with the data retrived
+//             if (data === null ||data.count==0)
+//                 res.status(404).json({ message: `No Entrevistas where found with the current condition: ${req.query.text} , ${req.query.cargo}` });
+//             else
+//                 res.status(200).json(data);
+
+//         })
+//         .catch (err =>{ 
+//             res.status(500).json({
+//                 message: err.message || `Some error occurred while retrieving the Entrevistas..`
+//             });
+//         })
+
+
+
+
+// }
+
+// exports.findEntrevistaFilterd = (req, res) => {
+//     let entrevistas
+//     Entrevistas.findAll({ where: { id_user: req.loggedUserId } })
+//     .then((data) => {
+//         if(data.length > 0){
+//             entrevistas = data
+//         }
+//         Participantes.findAll( { where: { id_user: req.loggedUserId }} )
+//         .then((prop) => {
+//             if(prop.length > 0){
+//                 prop.forEach(element => {
+//                     console.log("prop " + prop.dataValues[0])
+//                     Entrevistas.findOne({ where: { id_agenda: prop.dataValues.id_agenda } })
+//                     .then((entr) => {
+//                         entrevistas.push(entre)
+//                     })
+//                 });
+//             }
+//         })
+
+//         res.status(200).json(entrevistas)
+//     })
+// }
+
+exports.findEntrevistaFilterd = (req, res) => {
+    let entrevistas = []
+    if(req.query.texto){
+        Participantes.findAll({ where: { id_user: req.loggedUserId } })
+        .then((data) => {
+            if(data.length != 0){
+                for(let i = 0 ; i < data.length; i++){
+                    entrevistas.push(data[i].id_agenda)
     
-
-    // find and count all according to the queries recived in the conditions to search on the db 
-    Entrevistas.findAndCountAll({where:condition1,include:[ 
-        {model: User, as: 'creator' , where:condition2 },
-        {model: User, through: { attributes: [] },where:condition3} // remove ALL data retrieved from join table       
-    ]})
-        .then(data =>{
-            // if no entrevistas was not found, then return a 404 message , if not then it will respond with the data retrived
-            if (data === null ||data.count==0)
-                res.status(404).json({ message: `No Entrevistas where found with the current condition: ${req.query.text} , ${req.query.cargo}` });
-            else
-                res.status(200).json(data);
-            
+                }
+            }
+            Entrevistas.findAll( { where: { [Op.and]:[{texto_agenda: {[Op.like]: `%${req.query.texto}%` }}, { [Op.or]: [{ id_agenda: { [Op.in]:entrevistas } }, { id_user: req.loggedUserId }] }] } })
+            .then((prop) => {
+                if(prop.length != 0 ){
+                    res.status(200).json(prop)
+                }
+            })
         })
-        .catch (err =>{ 
-            res.status(500).json({
-                message: err.message || `Some error occurred while retrieving the Entrevistas..`
-            });
-        })
-
-
-
+    }else{
+        Participantes.findAll({ where: { id_user: req.loggedUserId } })
+        .then((data) => {
+            if(data.length != 0){
+                for(let i = 0 ; i < data.length; i++){
+                    entrevistas.push(data[i].id_agenda)
     
+                }
+            }
+            Entrevistas.findAll( { where: { [Op.or]: [{ id_agenda: { [Op.in]:entrevistas } }, { id_user: req.loggedUserId }] } })
+            .then((prop) => {
+                if(prop.length != 0 ){
+                    res.status(200).json(prop)
+                }
+            })
+        })
+    }
 }
+
+// exports.findEntrevistaFilterd = (req, res) => {
+//     if (req.query.text) {
+//       const whitelist = ['text'];
+//       let condition = { id_user: req.loggedUserId };
+//       Object.keys(req.query).forEach(function (key) {
+//         if (!whitelist.includes(key))
+//           return; //inform user of BAD REQUEST           
+//         if (key == "text")
+//           condition.texto_agenda = { [Op.like]: `%${req.query[key]}%` }
+//       });
+//       Proposta.findAll({
+//         where: condition
+//       })
+//         .then(data => {
+//           res.status(200).json(data);
+//         })
+//         .catch(err => {
+//           res.status(500).json({
+//             message:
+//               err.message || "Ocorreu um erro ao encontrar propostas"
+//           });
+//         });
+//     }
+//     else {
+//       Proposta.findAll({ where: { id_tipo_estado: 3 } })
+//         .then(data => {
+//           res.status(200).json(data);
+//         })
+//         .catch((err) => {
+//           res.status(500).json({
+//             message:
+//               err.message || "Ocorreu um erro ao encontrar propostas",
+//           });
+//         });
+//     }
+//   }
 
 
 // adding/creating a new entrevista to the DB
 exports.createEntrevista = (req, res) => {
 
     // create a new entrevista acording with the data recived
-    Entrevistas.create({id_user: req.body.id_user,data_hora: req.body.data_hora,id_tipo_estado: req.body.id_tipo_estado,texto_agenda: req.body.texto_agenda})
+    Entrevistas.create({ id_user: req.body.id_user, data_hora: req.body.data_hora, id_tipo_estado: req.body.id_tipo_estado, texto_agenda: req.body.texto_agenda })
         .then(data => {
             // so data.null is gonna be the new assined id_agenda, acording to console.log(data) id_agenda: null and because its null it will a sign a new id value
-                          
+
             res.status(201).json({ message: "Nova entrevista criada", location: "/entrevistas/" + data.null });
-            
+
         })
         .catch(err => {
             if (err.name === 'SequelizeValidationError')
@@ -127,7 +227,7 @@ exports.updateEntrevista = (req, res) => {
         })
         .catch(err => {
             res.status(500).json({
-                message:err.message || `Ocorreu um erro ao alterar a entrevista com o id ${req.params.idEntrevista}.`
+                message: err.message || `Ocorreu um erro ao alterar a entrevista com o id ${req.params.idEntrevista}.`
             });
         });
 }
