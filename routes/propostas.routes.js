@@ -14,9 +14,9 @@ router.use((req, res, next) => {
 })
 
 router.route('/')
-    //.get(propostasController.findPropostasFiltered)
+    .get(propostasController.findPropostasFiltered)
     .post(authController.verifyToken, propostasController.create)
-    .get(authController.verifyToken, propostasController.getMyPropostaFiltered)
+    //.get(authController.verifyToken, propostasController.getMyPropostaFiltered)
 
 router.route('/pending')
     .get(authController.verifyToken, authController.isAdmin, propostasController.ProposalForApproval)
