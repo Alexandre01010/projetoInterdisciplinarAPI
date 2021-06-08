@@ -18,13 +18,16 @@ router.use((req, res, next) => {
 })
 
 router.route('/:proposalID')
-    .post(authController.verifyToken, authController.isStudent, candidaturaController.createCandidatura)
+    .post(authController.verifyToken, authController.isOnlyStudent, candidaturaController.createCandidatura)
 
 router.route('/')
-    .get(candidaturaController.getCandidaturas)
+    .get(authController.verifyToken, authController.isAdmin, candidaturaController.getCandidaturas)
 
 router.route('/associadas')
     .get(candidaturaController.getByProposal)
+
+router.route('/minhas')
+    .get(authController.verifyToken, authController.isOnlyStudent, candidaturaController.getMyCandidaturas )
 
     // router.route('/:userID')
     // .get(authController.verifyToken, authController.isAdminOrLoggedUser, userController.getUser);

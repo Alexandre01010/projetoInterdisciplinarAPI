@@ -45,23 +45,6 @@ exports.findByUser = (req, res) => {
   }
 };
 
-// exports.findAll = (req, res) => {
-//   Foruns.findAll(req.body)
-//     .then((data) => {
-//       if (data === null) {
-//         res.status(404).json({
-//           message: `Não foi encontrado nenhum forum.`,
-//         });
-//       } else {
-//         res.status(200).json(data);
-//       }
-//     })
-//     .catch((err) => {
-//       res.status(500).json({
-//         message: err.message || "Ocorreu um erro a obter foruns",
-//       });
-//     });
-// };
 exports.findAll = (req, res) => {
   let foruns = []
   if (req.query.texto) {

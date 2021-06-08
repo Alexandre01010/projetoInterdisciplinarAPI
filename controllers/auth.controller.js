@@ -162,6 +162,17 @@ exports.isStudent = async (req, res, next) => {
     })
 }
 
+exports.isOnlyStudent = async (req, res, next) => {
+    let user = await User.findByPk(req.loggedUserId)
+    let role = await user.id_tipo_user
+    if(role === 3){
+        return next()
+    }
+    return res.status(403).send({
+        message: "Unauthorized"
+    })
+}
+
 exports.isExternalEntity = async (req, res, next) => {
     let user = User.findByPk(req.loggedUserId)
     let role = user.id_tipo_user

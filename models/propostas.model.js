@@ -33,15 +33,15 @@ module.exports = (sequelize, DataTypes) => {
     },
     nome_tutor:{
       type: DataTypes.STRING,
-      allowNull: false
+      allowNull: true
     },
     cargo_tutor:{
       type: DataTypes.STRING,
-      allowNull: false
+      allowNull: true
     },
     contato:{
       type: DataTypes.INTEGER,
-      allowNull: false
+      allowNull: true
     },
     recursos_necessarios:{
       type: DataTypes.STRING,
@@ -61,23 +61,23 @@ module.exports = (sequelize, DataTypes) => {
     },
     nome_entidade:{
       type: DataTypes.STRING,
-      allowNull: false
+      allowNull: true
     },
     morada_entidade:{
       type: DataTypes.STRING,
-      allowNull: false
+      allowNull: true
     },
     codigo_postal:{
       type: DataTypes.STRING,
-      allowNull: false
+      allowNull: true
     },
     email:{
       type: DataTypes.STRING,
-      allowNull: false
+      allowNull: true
     },
     msgRevisao:{
       type: DataTypes.STRING,
-      allowNull: false
+      allowNull: true
     }
   }, {
     timestamps: false,

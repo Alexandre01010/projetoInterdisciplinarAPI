@@ -43,7 +43,7 @@ exports.createCandidatura = (req, res) => {
             } else {
               Candidaturas.create({
                 id_user: req.loggedUserId, id_proposta: req.params.proposalID, mensagem: req.body.mensagem,
-                id_tipo_estado: req.body.id_tipo_estado, n_ordem_escolha: req.body.n_ordem_escolha
+                id_tipo_estado: 1, n_ordem_escolha: req.body.n_ordem_escolha
               })
                 .then((data) => {
                   res.status(201).json({
@@ -206,5 +206,23 @@ exports.deleteCandidatura = (req, res) => {
           })
       }
     })
+}
+
+exports.getMyCandidaturas = (req, res) => {
+  Candidaturas.findAll({ where: { id_user: req.loggedUserId } })
+  .then((data) => {
+    if(data.length != 0){
+      res.status(200).json(data)
+    }else{
+      res.status(404).json({
+        message: "Não foi encontrada nenhuma candidatura"
+      })
+    }
+  })
+  .catch((err) => {
+    res.status(500).json({
+      message: "Ocorreu um erro ao encontrar candidaturas"
+    })
+  })
 }
 
