@@ -32,7 +32,7 @@ exports.create = (req, res) => {
           res.status(500).json({ message: "Já existe essa proposta" })
         } else {
           res.status(500).json({
-            message: err || "Ocorreu um erro ao criar uma candidatura à proposta " + req.params.proposalID
+            message: err + "dfkdskfsdkfs" || "Ocorreu um erro ao criar uma candidatura à proposta " + req.params.proposalID
           })
         }
       }
