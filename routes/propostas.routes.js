@@ -18,6 +18,9 @@ router.route('/')
     .post(authController.verifyToken, propostasController.create)
     //.get(authController.verifyToken, propostasController.getMyPropostaFiltered)
 
+router.route('/minhas')
+    .get(authController.verifyToken, propostasController.getMyPropostaFiltered)
+
 router.route('/pending')
     .get(authController.verifyToken, authController.isAdmin, propostasController.ProposalForApproval)
 
