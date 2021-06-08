@@ -34,10 +34,14 @@ db.proposta.belongsToMany(db.user, { through: db.candidatura, foreignKey: 'id_pr
 
 //entrevitas relations commenting this inorder to test just the entrevistas
 db.participante = require("./participantes.model.js")(sequelize, DataTypes);
+db.forumUser = require('./forumUsers.model.js')(sequelize, DataTypes);
 // n:m entrevista:user 
 db.entrevista = require("./entrevistas.model.js")(sequelize, DataTypes);
 db.entrevista.belongsToMany(db.user ,{through: db.participante, foreignKey: 'id_agenda', otherKey: 'id_user'})
 db.user.belongsToMany(db.entrevista ,{through: db.participante, foreignKey: 'id_user', otherKey: 'id_agenda'})
+
+db.forum.belongsToMany(db.user, { through: db.forumUser, foreignKey: 'id_forum', otherKey: 'id_user' })
+db.user.belongsToMany(db.forum, { through: db.forumUser, foreignKey: 'id_user', otherKey: 'id_forum' })
 //1:n
 db.entrevista.belongsTo(db.user, {as:'creator' ,foreignKey: 'id_user'})
 

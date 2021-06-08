@@ -1,6 +1,7 @@
 const express = require('express');
 let router = express.Router();
 const forunsController = require("../controllers/foruns.controller.js");
+const authController = require("../controllers/auth.controller")
 const temasController = require("../controllers/temas.controller.js");
 router.use((req, res, next) => {
     const start = Date.now();
@@ -24,8 +25,11 @@ router.route('/:forumID/temas')
 router.route('/:userID')
     .get(forunsController.findByUser)
 router.route('/')
-    .get(forunsController.findAll)
-    .post(forunsController.create)
+    .get(authController.verifyToken, forunsController.findAll)
+    .post(authController.verifyToken, forunsController.create)
+
+router.route('/:forumID/participantes/:idParticipante')
+    .post(authController.verifyToken, forunsController.addParticipante)
 
 // //send a predefined error message for invalid routes on TUTORIALS
 router.all('*', function (req, res) {
