@@ -28,13 +28,11 @@ exports.create = (req, res) => {
       if (err.name === 'SequelizeValidationError')
         res.status(400).json({ message: err.errors[0].message });
       else {
-        if (err.errors[0].message === "PRIMARY must be unique") {
-          res.status(500).json({ message: "Já existe essa proposta" })
-        } else {
+        
           res.status(500).json({
-            message: err + "dfkdskfsdkfs" || "Ocorreu um erro ao criar uma candidatura à proposta " + req.params.proposalID
+            message: err || "Ocorreu um erro ao criar uma candidatura à proposta " + req.params.proposalID
           })
-        }
+      
       }
     });
 };
