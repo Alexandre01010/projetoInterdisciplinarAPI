@@ -171,26 +171,26 @@ exports.deleteCandidatura = (req, res) => {
           message: "Proposta " + req.params.proposalID + " não existe"
         })
       } else {
-        User.findByPk(req.params.userID)
+        User.findByPk(req.req.loggedUserId)
           .then((user) => {
             if (user === null) {
               res.status(404).json({
-                message: "Não existe nenhuma candidatura do user " + req.params.userID + " à proposta " + req.params.proposalID
+                message: "Não existe nenhuma candidatura do user " + req.req.loggedUserId + " à proposta " + req.params.proposalID
               })
             } else {
-              Candidaturas.findAll({ where: { id_proposta: req.params.proposalID, id_user: req.params.userID } })
+              Candidaturas.findAll({ where: { id_proposta: req.params.proposalID, id_user: req.loggedUserId } })
                 .then((data) => {
                   console.log(data)
                   if (data.length == 0) {
                     res.status(404).json({
-                      message: "Não existe uma candidatura do utilizador " + req.params.userID + " à proposta " + req.params.proposalID
+                      message: "Não existe uma candidatura do utilizador " + req.req.loggedUserId + " à proposta " + req.params.proposalID
                     })
                   } else {
-                    Candidaturas.destroy({ where: { id_proposta: req.params.proposalID, id_user: req.params.userID } })
+                    Candidaturas.destroy({ where: { id_proposta: req.params.proposalID, id_user: req.req.loggedUserId } })
                       .then((data) => {
                         if (data == 1) {
                           res.status(200).json({
-                            message: "Candidatura do user " + req.params.userID + " à proposta " + req.params.proposalID + " foi eliminada com sucesso"
+                            message: "Candidatura do user " + req.req.loggedUserId + " à proposta " + req.params.proposalID + " foi eliminada com sucesso"
                           })
                         }
                       })
