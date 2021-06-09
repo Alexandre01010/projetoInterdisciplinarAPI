@@ -11,6 +11,12 @@ router.use((req, res, next) => {
     });
     next()
 })
+
+router.route('/temas/:temaID/respostas')
+    .get(temasController.findRespostas)
+    //.put(temasController.update)
+    //.delete(temasController.delete)
+
 router.route('/temas/:temaID')
     .get(temasController.findByID)
     .put(temasController.update)
