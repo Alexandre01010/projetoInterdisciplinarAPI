@@ -94,8 +94,8 @@ exports.signin = async (req, res) => {
             expiresIn: 86400 // 24 hours
         });
         return res.status(200).json({
-            username: user.nome,
-            email: user.email, accessToken: token
+            username: user.nome, role: user.id_tipo_user,
+            email: user.email, id: user.id_user , accessToken: token
         });
     } catch (err) { res.status(500).json({ message: err.message }); };
 };
