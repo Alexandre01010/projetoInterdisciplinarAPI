@@ -22,6 +22,7 @@ router.route('/:proposalID')
 
 router.route('/')
     .get(authController.verifyToken, authController.isAdmin, candidaturaController.getCandidaturas)
+    .put(authController.verifyToken, candidaturaController.updateCandidatura)
 
 router.route('/associadas')
     .get(candidaturaController.getByProposal)
@@ -34,7 +35,6 @@ router.route('/minhas')
 
 router.route('/:userID')
     .get(candidaturaController.getOneCandidatura)
-    .put(candidaturaController.updateCandidatura)
     .delete(authController.verifyToken, authController.isAdminOrLoggedUser,  candidaturaController.deleteCandidatura)
 
    
