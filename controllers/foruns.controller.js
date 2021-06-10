@@ -55,7 +55,7 @@ exports.findAll = (req, res) => {
     //         foruns.push(data[i].id_forum)
     //       }
     //     }
-        Foruns.findAll({ where: { [Op.and]: [{ titulo: { [Op.like]: `%${req.query.texto}%` } }, { [Op.or]: [{ id_forum: { [Op.in]: foruns } }, { id_user: req.loggedUserId }] }] } })
+        Foruns.findAll()
           .then((prop) => {
             if (prop.length != 0) {
               res.status(200).json(prop)
@@ -81,7 +81,7 @@ exports.findAll = (req, res) => {
 
     //       }
     //     }
-        Foruns.findAll({ where: { [Op.or]: [{ id_forum: { [Op.in]: foruns } }, { id_user: req.loggedUserId }] } })
+        Foruns.findAll()
           .then((prop) => {
             if (prop.length != 0) {
               res.status(200).json(prop)
