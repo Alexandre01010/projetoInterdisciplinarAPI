@@ -25,6 +25,9 @@ router.route('/')
     .put(authController.verifyToken, candidaturaController.updateCandidatura)
     .delete(authController.verifyToken, authController.isAdminOrLoggedUser,  candidaturaController.deleteCandidatura)
 
+router.route('/updateState')
+    .put(authController.verifyToken, candidaturaController.updateCandidaturaState)
+
 router.route('/associadas')
     .get(candidaturaController.getByProposal)
 
