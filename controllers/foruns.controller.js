@@ -48,13 +48,13 @@ exports.findByUser = (req, res) => {
 exports.findAll = (req, res) => {
   let foruns = []
   if (req.query.texto) {
-    userForum.findAll({ where: { id_user: req.loggedUserId } })
-      .then((data) => {
-        if (data.length != 0) {
-          for (let i = 0; i < data.length; i++) {
-            foruns.push(data[i].id_forum)
-          }
-        }
+    // userForum.findAll({ where: { id_user: req.loggedUserId } })
+    //   .then((data) => {
+    //     if (data.length != 0) {
+    //       for (let i = 0; i < data.length; i++) {
+    //         foruns.push(data[i].id_forum)
+    //       }
+    //     }
         Foruns.findAll({ where: { [Op.and]: [{ titulo: { [Op.like]: `%${req.query.texto}%` } }, { [Op.or]: [{ id_forum: { [Op.in]: foruns } }, { id_user: req.loggedUserId }] }] } })
           .then((prop) => {
             if (prop.length != 0) {
@@ -71,16 +71,16 @@ exports.findAll = (req, res) => {
                 err.message || "Ocorreu um erro ao encontrar foruns",
             });
           })
-      })
+    //   })
   } else {
-    userForum.findAll({ where: { id_user: req.loggedUserId } })
-      .then((data) => {
-        if (data.length != 0) {
-          for (let i = 0; i < data.length; i++) {
-            foruns.push(data[i].id_forum)
+    // userForum.findAll({ where: { id_user: req.loggedUserId } })
+    //   .then((data) => {
+    //     if (data.length != 0) {
+    //       for (let i = 0; i < data.length; i++) {
+    //         foruns.push(data[i].id_forum)
 
-          }
-        }
+    //       }
+    //     }
         Foruns.findAll({ where: { [Op.or]: [{ id_forum: { [Op.in]: foruns } }, { id_user: req.loggedUserId }] } })
           .then((prop) => {
             if (prop.length != 0) {
@@ -97,7 +97,7 @@ exports.findAll = (req, res) => {
                 err.message || "Ocorreu um erro ao encontrar foruns",
             });
           })
-      })
+    //   })
   }
 }
 
