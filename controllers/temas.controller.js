@@ -145,7 +145,7 @@ exports.create = (req, res) => {
     } else {
       Tema.create({
         id_forum: req.params.forumID,
-        id_user: req.body.id_user,
+        id_user: req.loggedUserId,
         titulo: req.body.titulo,
       })
         .then((data) => {

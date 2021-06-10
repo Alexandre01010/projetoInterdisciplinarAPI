@@ -24,8 +24,8 @@ router.route('/temas/:temaID')
 
 
 router.route('/:forumID/temas')
-    .get(temasController.findByForum)
-    .post(temasController.create)
+    .get(authController.verifyToken,temasController.findByForum)
+    .post(authController.verifyToken,temasController.create)
 
 //conlcuir quando houver users
 router.route('/:userID')
