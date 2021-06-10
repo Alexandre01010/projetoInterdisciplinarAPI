@@ -164,7 +164,7 @@ exports.updateCandidatura = (req, res) => {
 }
 
 exports.updateCandidaturaState = (req, res) => {
-  Candidaturas.findOne({ where: { id_proposta: req.params.proposalID, id_user: req.body.id_user } })
+  Candidaturas.findOne({ where: { id_proposta: req.params.proposalID, id_user: req.params.userID } })
     .then((data) => {
       console.log(data.dataValues.mensagem)
       if (data.dataValues.mensagem == req.body.mensagem && data.dataValues.id_tipo_estado == req.body.id_tipo_estado && data.dataValues.n_ordem_escolha == req.body.n_ordem_escolha) {
@@ -172,15 +172,15 @@ exports.updateCandidaturaState = (req, res) => {
           message: "Nenhum dado da candidatura foi alterado. Por favor altere os dados que pretende"
         })
       } else {
-        Candidaturas.update({ id_user: req.body.id_user, mensagem: req.body.mensagem, id_tipo_estado: req.body.id_tipo_estado, n_ordem_escolha: req.body.n_ordem_escolha }, { where: { id_proposta: req.params.proposalID, id_user: req.body.id_user } })
+        Candidaturas.update({ id_user: req.params.userID, mensagem: req.body.mensagem, id_tipo_estado: req.body.id_tipo_estado, n_ordem_escolha: req.body.n_ordem_escolha }, { where: { id_proposta: req.params.proposalID, id_user: req.params.userID } })
           .then((data) => {
             if (data == 1) {
               res.json({
-                message: "Candidatura do utilizador " + req.body.id_user + " à proposta " + req.params.proposalID + " foi alterada com sucesso"
+                message: "Candidatura do utilizador " + req.params.userID + " à proposta " + req.params.proposalID + " foi alterada com sucesso"
               })
             } else {
               res.status(404).json({
-                message: "Não foi encontrada nenhuma candidatura do utilizador " + req.body.id_user + " à proposta " + req.params.proposalID
+                message: "Não foi encontrada nenhuma candidatura do utilizador " + req.params.userID + " à proposta " + req.params.proposalID
               })
             }
           })
@@ -188,7 +188,7 @@ exports.updateCandidaturaState = (req, res) => {
     })
     .catch((err) => {
       res.status(500).json({
-        message: "Ocorreu um erro ao alterar a candidatura à proposta " + req.params.proposalID + " para o utilizador " + req.body.id_user
+        message: "Ocorreu um erro ao alterar a candidatura à proposta " + req.params.proposalID + " para o utilizador " + req.params.userID
       })
     })
 }
