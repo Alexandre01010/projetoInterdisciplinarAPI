@@ -14,6 +14,7 @@ router.use((req, res, next) => {
 
 router.route('/temas/:temaID/respostas')
     .get(temasController.findRespostas)
+    .post(authController.verifyToken,temasController.createResp)
     //.put(temasController.update)
     //.delete(temasController.delete)
 

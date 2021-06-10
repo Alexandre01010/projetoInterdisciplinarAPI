@@ -135,6 +135,37 @@ exports.findByForum = (req, res) => {
   });
 };
 
+exports.createResp = (req, res) => {
+  Tema.findByPk(req.params.temaID).then((data) => {
+    if (data === null || data.length == 0) {
+      res.status(404).json({
+        message: "Não existe o tema com id" + req.params.temaID,
+      });
+    } else {
+      Resposta.create({
+        id_user: req.loggedUserId,
+        data_hora: new Date().getTime(),
+        texto_resposta: req.body.texto_resposta,
+        gosto: 0,
+        id_tema: req.params.temaID,
+      }).then((data) => {
+        res.status(201).json({
+          message: "Nova resposta criada",
+          location: `/foruns/${req.params.forumID}/temas/respostas`,
+        });
+      })
+      .catch((err) => {
+        if (err.name === "SequelizeValidationError")
+          res.status(400).json({ message: err.errors[0].message });
+        else
+          res.status(500).json({
+            message: err.message || "Ocorreu um erro ao criar o resposta.",
+          });
+      });;
+    }
+  });
+};
+
 exports.create = (req, res) => {
   Forum.findByPk(req.params.forumID).then((forum) => {
     if (forum == null) {
