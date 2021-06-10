@@ -26,4 +26,4 @@ app.use('/', require('./routes/auth.routes.js'))
 app.get('*', function (req, res) {
     res.status(404).json({ message: 'Path not found' });
 })
-app.listen(port, host, () => console.log(`App listening at http://${host}:${port}/`));
+app.listen(port, () => console.log(`App listening on PORT ${port}/`));
